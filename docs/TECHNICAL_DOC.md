@@ -69,6 +69,17 @@ missing answers score zero and reset the streak. Ties rank by seat order.
 - 64 KiB guest stack and a per-frame fuel budget: all collections are heap `Vec`s, and JSON is built by hand without
   `core::fmt`.
 
+### Sound on the device
+
+`bmc_wasm_sdk::audio_play` hands the clip to the wasm host, which plays it with rodio only when bmc-wasm-runtime is
+built with its `audio` feature. Stock bmc-main enables that feature for the desktop testbed alone, so on a Deck the
+call is a no-op. The reason is the sound card: the Deck's ALSA `default` is a software-volume layer directly over the
+hardware with no mixing plugin, so a second opener gets `Resource busy`, and the stock runtime would hold the card from
+startup and block the system's alarm and alert player. `patches/bmc-main-wasm-audio-on-device.patch` changes the
+runtime to open the output on demand, hold it until the clip's decoded length plus 250 ms, and release it on the next
+clock tick or when the widget goes dormant, and adds `audio` to the device `hostFeatures`. System sounds then only
+lose the card during the second a widget clip is playing. The patch is a candidate for upstream.
+
 ### Validation
 
 ```shell

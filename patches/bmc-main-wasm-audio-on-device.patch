@@ -1,0 +1,192 @@
+diff --git a/bmc-wasm-runtime/src/audio_registry.rs b/bmc-wasm-runtime/src/audio_registry.rs
+index 2888a53f..06b2bf03 100644
+--- a/bmc-wasm-runtime/src/audio_registry.rs
++++ b/bmc-wasm-runtime/src/audio_registry.rs
+@@ -162,6 +162,18 @@ impl AudioRegistry {
+         bucket.push(sink);
+     }
+ 
++    /// Whether every started clip has finished playing.
++    #[cfg(feature = "audio")]
++    pub fn all_drained(&self) -> bool {
++        self.sinks.values().flatten().all(rodio::Sink::empty)
++    }
++
++    /// Drop every sink; used when the output stream is released.
++    #[cfg(feature = "audio")]
++    pub fn clear_sinks(&mut self) {
++        self.sinks.clear();
++    }
++
+     /// Stop and drop every sink registered for `id`.
+     /// Only defined when the `audio` feature is enabled; with the feature off,
+     /// no sink storage exists so the call site must gate the invocation too.
+diff --git a/bmc-wasm-runtime/src/host_api.rs b/bmc-wasm-runtime/src/host_api.rs
+index 1b9e3a6e..28b5acef 100644
+--- a/bmc-wasm-runtime/src/host_api.rs
++++ b/bmc-wasm-runtime/src/host_api.rs
+@@ -1273,6 +1273,10 @@ pub(crate) struct HostState {
+     /// `None` if audio output is unavailable (headless, no ALSA, etc.).
+     #[cfg(feature = "audio")]
+     pub audio_stream: Option<(rodio::OutputStream, rodio::OutputStreamHandle)>,
++    /// Monotonic time after which every started clip has drained and the
++    /// output can be released; `None` while nothing is scheduled.
++    #[cfg(feature = "audio")]
++    pub audio_idle_at_ms: Option<u64>,
+ 
+     /// Logical viewport dimensions the widget renders into.
+     /// Set by `WasmWidgetRuntime::new` before the guest's
+@@ -1524,18 +1528,13 @@ impl HostState {
+             instance_id: synthetic_instance_id(),
+             asset_cache: None,
+             package_assets: None,
++            // Opened on demand by `audio_output`: the Deck's ALSA device is
++            // exclusive, so holding it from startup would lock out the
++            // system's own alarm and alert sounds.
+             #[cfg(feature = "audio")]
+-            audio_stream: {
+-                match rodio::OutputStream::try_default() {
+-                    Ok((stream, handle)) => Some((stream, handle)),
+-                    Err(e) => {
+-                        tracing::warn!(
+-                            "audio output unavailable: {e} — audio_play will be a no-op"
+-                        );
+-                        None
+-                    }
+-                }
+-            },
++            audio_stream: None,
++            #[cfg(feature = "audio")]
++            audio_idle_at_ms: None,
+             widget_width: 0,
+             widget_height: 0,
+             viewport_shape: bmc_wasm_protocol::ViewportShape::Rectangular,
+@@ -1546,6 +1545,47 @@ impl HostState {
+         }
+     }
+ 
++    /// The sound card, opened for a clip that is about to start.
++    ///
++    /// The Deck's ALSA `default` is a software-volume layer straight over the
++    /// hardware with no mixing, so only one process may hold it. The stream is
++    /// opened here on demand and dropped by [`Self::release_idle_audio`] once
++    /// every clip has drained, leaving the card free for the system's alarms
++    /// between widget cues. A busy card drops the clip with a warning.
++    #[cfg(feature = "audio")]
++    pub fn audio_output(&mut self) -> Option<rodio::OutputStreamHandle> {
++        if self.audio_stream.is_none() {
++            match rodio::OutputStream::try_default() {
++                Ok(pair) => self.audio_stream = Some(pair),
++                Err(e) => {
++                    tracing::warn!("audio output unavailable: {e} — clip dropped");
++                    return None;
++                }
++            }
++        }
++        self.audio_stream.as_ref().map(|(_, handle)| handle.clone())
++    }
++
++    /// Keep the output open until at least `until_ms` on the monotonic clock.
++    #[cfg(feature = "audio")]
++    pub fn hold_audio_until(&mut self, until_ms: u64) {
++        self.audio_idle_at_ms = Some(self.audio_idle_at_ms.map_or(until_ms, |t| t.max(until_ms)));
++    }
++
++    /// Drop the output once the hold has passed and no sink is still playing.
++    /// Called on every clock update and when the widget goes dormant.
++    #[cfg(feature = "audio")]
++    pub fn release_idle_audio(&mut self, force: bool) {
++        let due = self
++            .audio_idle_at_ms
++            .is_some_and(|at| self.monotonic_ms >= at);
++        if self.audio_stream.is_some() && (force || (due && self.audio.all_drained())) {
++            self.audio.clear_sinks();
++            self.audio_stream = None;
++            self.audio_idle_at_ms = None;
++        }
++    }
++
+     /// Reset per-frame flags.
+     pub fn begin_render_frame(&mut self) {
+         self.frame_schedule.begin_render_frame();
+diff --git a/bmc-wasm-runtime/src/runtime/backend.rs b/bmc-wasm-runtime/src/runtime/backend.rs
+index 3ab85234..1f0f4af3 100644
+--- a/bmc-wasm-runtime/src/runtime/backend.rs
++++ b/bmc-wasm-runtime/src/runtime/backend.rs
+@@ -1566,6 +1566,8 @@ impl WasmWidgetRuntime {
+         let state = self.store.data_mut();
+         state.system_time = system_time;
+         state.monotonic_ms = monotonic_ms;
++        #[cfg(feature = "audio")]
++        state.release_idle_audio(false);
+         // Clamp so that wasm_delta doesn't underflow when time rewinds
+         // (e.g. after a capture span resets the timeline cursor).
+         state.frame_schedule.last_wasm_render_at_ms = state
+@@ -1876,6 +1878,9 @@ impl WasmWidgetRuntime {
+     }
+ 
+     fn suspend_renderer_assets(&mut self) -> Result<RendererAssetSuspensionObservation, String> {
++        // Dormant widgets get no clock updates, so give the sound card back now.
++        #[cfg(feature = "audio")]
++        self.store.data_mut().release_idle_audio(true);
+         let records = self.store.data().renderer_assets.restorable();
+         let Some(mut pointer) = self.store.data().renderer_ptr else {
+             return Err("renderer unavailable during asset suspension".to_owned());
+diff --git a/bmc-wasm-runtime/src/runtime/imports/audio.rs b/bmc-wasm-runtime/src/runtime/imports/audio.rs
+index a12c8c81..f80df4b6 100644
+--- a/bmc-wasm-runtime/src/runtime/imports/audio.rs
++++ b/bmc-wasm-runtime/src/runtime/imports/audio.rs
+@@ -157,20 +157,26 @@ fn register_audio_play_import(linker: &mut Linker<HostState>) -> Result<()> {
+ 
+             #[cfg(feature = "audio")]
+             {
+-                let Some((_, ref handle)) = state.audio_stream else {
++                let Some(handle) = state.audio_output() else {
+                     return;
+                 };
+                 let cursor = std::io::Cursor::new(data);
+                 if let Ok(decoder) = rodio::Decoder::new(cursor)
+-                    && let Ok(sink) = rodio::Sink::try_new(handle)
++                    && let Ok(sink) = rodio::Sink::try_new(&handle)
+                 {
+                     let volume = u8::try_from(volume.min(100))
+                         .expect("BUG: volume bounded to 100 must fit in u8");
+                     let vol = f32::from(volume) / 100.0;
+                     sink.set_volume(vol);
+                     sink.append(decoder);
+-
+                     state.audio.push_sink(id, sink);
++                    // Slack past the decoded length covers the output's own
++                    // buffering before the card is handed back.
++                    let until = state
++                        .monotonic_ms
++                        .saturating_add(u64::from(sample_duration_ms))
++                        .saturating_add(250);
++                    state.hold_audio_until(until);
+                 }
+             }
+ 
+diff --git a/workspace.nix b/workspace.nix
+index cc7bd1f9..dbccd157 100644
+--- a/workspace.nix
++++ b/workspace.nix
+@@ -491,7 +491,9 @@ let
+         (mkAllWasmWidgets {
+           profile = bmc.profiles."${arch}-${profile}";
+           # Mirror mkOpenwrt: profiling on for non-release builds.
+-          hostFeatures = lib.optionals (profile != "release") [ "profiling" ];
++          # `audio` lets WASM widgets play clips through the Deck speaker; the
++          # runtime opens the card per clip so the system's own sounds keep working.
++          hostFeatures = [ "audio" ] ++ lib.optionals (profile != "release") [ "profiling" ];
+         })
+       ];
+     };
+@@ -564,7 +566,7 @@ let
+                 wasmWidgetPackage = mkAllWasmWidgets {
+                   profile = bmc.profiles."${arch}-debug";
+                   # VM is always debug → mirror mkOpenwrt and turn profiling on.
+-                  hostFeatures = [ "profiling" ];
++                  hostFeatures = [ "audio" "profiling" ];
+                 };
+               in
+               pkgs.symlinkJoin {

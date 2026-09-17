@@ -73,9 +73,21 @@ few minutes.
    scripts/deploy.sh party-quiz ../bmc-main <deck-ip> --first   # first time
    scripts/deploy.sh party-quiz ../bmc-main <deck-ip>           # updates
    ```
-6. **Play.** In the Deck's web app add **Party Quiz** to a fullscreen scene, turn off scene cycling (phones can only
+6. **Sounds (optional but recommended).** A stock bmc-main build silently drops every WASM widget's sounds on the
+   device: the runtime's audio playback is a compile-time feature that only the desktop testbed enables, and the
+   Deck's sound card is exclusive, so the stock code would also lock out the Deck's own alarms if it were switched on.
+   `patches/bmc-main-wasm-audio-on-device.patch` enables the feature for device builds and makes the runtime open the
+   card only while a clip plays. Apply it to bmc-main before deploying, then run the first deploy again so the
+   rebuilt runtime ships:
+
+   ```shell
+   git -C ../bmc-main apply ../BraiinsForgeWidgets/patches/bmc-main-wasm-audio-on-device.patch
+   ```
+
+   Without the patch the game plays fine, just silently.
+7. **Play.** In the Deck's web app add **Party Quiz** to a fullscreen scene, turn off scene cycling (phones can only
    reach the widget while its scene is on screen), swipe to the scene and scan the QR code.
-7. **Afterwards**, re-enable the Deck's automatic updates, which `deploy` switches off so they do not overwrite your
+8. **Afterwards**, re-enable the Deck's automatic updates, which `deploy` switches off so they do not overwrite your
    packages. Note that the next official update will remove the widget until you deploy it again:
 
    ```shell
@@ -100,6 +112,10 @@ few minutes.
 - **The phone says "Cannot reach the Deck at …".** The phone is not on the Deck's network, or a guest network isolates
   clients. Join the same Wi-Fi as the Deck.
 - **The QR code changed.** Every widget reload picks a new port; rescan.
+- **No sound from the Deck.** Widget audio needs the runtime patch from step 6; also check Night Mode, which lowers
+  or mutes the volume during quiet hours, and the widget's *Sounds* parameter.
+- **The screen dimmed and the lights stopped.** Night Mode. Turn it off for the evening in Settings, Display, or
+  enable "LED Notifications in Night Mode" under Sound & Light.
 
 Each widget has a user story in [`docs/USER_STORIES.md`](docs/USER_STORIES.md), a player guide in
 [`docs/USER_DOC.md`](docs/USER_DOC.md), and its design in [`docs/TECHNICAL_DOC.md`](docs/TECHNICAL_DOC.md). Work in
