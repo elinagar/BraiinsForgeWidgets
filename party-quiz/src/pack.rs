@@ -132,6 +132,19 @@ impl Rng {
     }
 }
 
+/// Move the answers of `q` into a random order and keep `correct` pointing
+/// at the same text. Authors tend to put the right answer in the same slot;
+/// without this the room learns the colour instead of the answer.
+pub fn shuffle_answers(q: &mut Question, rng: &mut Rng) {
+    let correct_text = q.answers.get(q.correct).cloned();
+    shuffle(&mut q.answers, rng);
+    if let Some(text) = correct_text
+        && let Some(pos) = q.answers.iter().position(|a| *a == text)
+    {
+        q.correct = pos;
+    }
+}
+
 /// Fisher–Yates in place.
 pub fn shuffle<T>(items: &mut [T], rng: &mut Rng) {
     for i in (1..items.len()).rev() {
@@ -234,6 +247,32 @@ bad-3\tBroken\tlegendary\tBad difficulty\tA\tB\tC\tD\t0\tx\n";
         );
         let played = vec![qs[0].id.clone(), qs[1].id.clone()];
         assert_eq!(select(qs, None, None, &played).len(), all - 2);
+    }
+
+    #[test]
+    fn shuffling_answers_keeps_the_correct_text_and_spreads_the_slot() {
+        let qs = parse_tsv(STARTER_PACK);
+        let mut rng = Rng::new(42);
+        let mut slots = [0_usize; ANSWER_COUNT];
+        for original in &qs {
+            let mut q = original.clone();
+            shuffle_answers(&mut q, &mut rng);
+            assert_eq!(
+                q.answers[q.correct], original.answers[original.correct],
+                "{}",
+                q.id
+            );
+            let mut sorted_a = q.answers.clone();
+            let mut sorted_b = original.answers.clone();
+            sorted_a.sort();
+            sorted_b.sort();
+            assert_eq!(sorted_a, sorted_b, "same answers, new order: {}", q.id);
+            slots[q.correct] += 1;
+        }
+        assert!(
+            slots.iter().all(|n| *n >= qs.len() / 10),
+            "correct answers land in every slot: {slots:?}"
+        );
     }
 
     #[test]

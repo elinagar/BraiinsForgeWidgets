@@ -135,7 +135,11 @@ mod wasm_glue {
             questions = pack::select(all, pack_filter, difficulty, &[]);
         }
         let seed = (u64::from(random_u32()) << 32) | u64::from(random_u32());
-        pack::shuffle(&mut questions, &mut Rng::new(seed));
+        let mut rng = Rng::new(seed);
+        pack::shuffle(&mut questions, &mut rng);
+        for question in &mut questions {
+            pack::shuffle_answers(question, &mut rng);
+        }
         game.load_questions(questions);
         DECK_STALE.set(false);
     }
@@ -227,7 +231,10 @@ mod wasm_glue {
                 }
             }
             Kind::Podium => record_best(game),
-            Kind::Lobby | Kind::Question | Kind::Standings => {}
+            // Back in the lobby after a game: rebuild the deck so the next game
+            // draws fresh questions in a fresh order, skipping the ones played.
+            Kind::Lobby => DECK_STALE.set(true),
+            Kind::Question | Kind::Standings => {}
         }
     }
 

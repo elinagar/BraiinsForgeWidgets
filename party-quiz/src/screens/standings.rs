@@ -155,7 +155,17 @@ fn list(data: &StandingsData) -> Node {
         rows.push(text(more, style!(size: FONT_LABEL, color: MUTED)));
     }
     if let Some(note) = &data.footnote {
-        rows.push(text(note.as_str(), style!(size: FONT_LABEL, color: MUTED)));
+        rows.push(row(
+            props!(padding: 14.0, border_radius: 12.0, background: CARD, cross_align: CrossAlign::Center),
+            [
+                hspace(6.0),
+                text(
+                    note.as_str(),
+                    style!(size: 20, weight: FontWeight::SEMIBOLD, color: ACCENT, text_overflow: TextOverflow::Ellipsis),
+                ),
+                hspace(6.0),
+            ],
+        ));
     }
     col(
         props!(width: LIST_W, justify_content: Justify::Center, gap: 10.0),
