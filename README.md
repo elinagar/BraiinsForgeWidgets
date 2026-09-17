@@ -37,6 +37,13 @@ cargo run -p party-quiz --example dev-server -- 8080
 Deployment uses bmc-main's Nix tooling, so the crate is copied into a bmc-main checkout first:
 
 ```shell
+scripts/deploy.sh party-quiz /path/to/bmc-main "$DEVICE_IP" --first   # first time: every package
+scripts/deploy.sh party-quiz /path/to/bmc-main "$DEVICE_IP"           # later: only the widget
+```
+
+Or step by step:
+
+```shell
 scripts/sync-to-bmc-main.sh party-quiz /path/to/bmc-main
 cd /path/to/bmc-main
 just wasm::dev party-quiz                                        # desktop testbed, hot reload
