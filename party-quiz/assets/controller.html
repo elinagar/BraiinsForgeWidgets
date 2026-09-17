@@ -173,8 +173,8 @@ var lastQ=-1;
 
 // ── Polling ──
 function poll(){clearTimeout(pollTimer);var url="/state?v="+lastV+(token?"&t="+encodeURIComponent(token):"");
-fetch(url,{cache:"no-store"}).then(function(r){if(r.status===204)return null;if(!r.ok)throw 0;return r.json()}).then(function(s){if(s){state=s;lastV=s.v;render(s)}else if(state&&state.phase==="lobby"&&!token){renderSwatches()}
-pollTimer=setTimeout(poll,(state&&state.poll)||1000)}).catch(function(){$("j-count").textContent="Cannot reach the Deck. Are you on its Wi-Fi?";pollTimer=setTimeout(poll,2000)})}
+fetch(url,{cache:"no-store"}).then(function(r){if(r.status===204)return null;if(!r.ok)throw r.status;return r.json()}).then(function(s){if(s){state=s;lastV=s.v;render(s)}else if(state&&state.phase==="lobby"&&!token){renderSwatches()}
+pollTimer=setTimeout(poll,(state&&state.poll)||1000)}).catch(function(e){var why=(e===504||e===502)?"The Deck is showing another scene. Swipe it back to Party Quiz, or turn off scene cycling in its web app.":"Cannot reach the Deck at "+location.host+". Is your phone on the Deck's Wi-Fi?";$("j-count").textContent=why;pollTimer=setTimeout(poll,2000)})}
 document.addEventListener("visibilitychange",function(){if(!document.hidden){lastV=-1;poll()}});
 renderSwatches();poll();
 })();

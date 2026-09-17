@@ -10,7 +10,9 @@ Party Quiz turns the Deck into a trivia game show. The Deck is the board; every 
 2. Optional settings: **Category pack** (Mixed, Science and space, Geography, History, Film, TV and music, Sport, Food
    and drink, Animals and nature, Technology, Bitcoin and mining, Kids), **Difficulty** (Easy, Medium, Hard, Mixed),
    **Questions per game** (5 to 30), **Answer time** (10 to 40 seconds), **Show player names on Deck**, **Sounds**.
-3. Swipe the Deck to that scene. The lobby shows a QR code and the address underneath it.
+3. Turn off scene cycling for the evening, or disable the other scenes. Phones can only talk to the widget while its
+   scene is on screen; if the Deck cycles away, phones see "The Deck is showing another scene" until it comes back.
+4. Swipe the Deck to that scene. The lobby shows a QR code and the address underneath it.
 
 ### Joining
 

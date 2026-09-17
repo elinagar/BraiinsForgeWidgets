@@ -12,7 +12,7 @@
   "binary": "bin/party-quiz",
   "icon": "assets/icon.svg",
   "category": "utility",
-  "config_help": "Players scan the QR code shown in the lobby with their phone camera. The first player to join hosts the game and starts it from their phone. Questions are downloaded from Braiins Forge and cached on the Deck, so a game also works without internet once a pack has been downloaded.",
+  "config_help": "Players scan the QR code shown in the lobby with their phone camera. The first player to join hosts the game and starts it from their phone. Keep the Party Quiz scene on screen while playing: turn off scene cycling or disable the other scenes, because the phones can only reach the widget while its scene is showing. Questions come with the widget and are cached on the Deck, so a game works without internet.",
   "settings": [
     "localization",
     "nightMode"

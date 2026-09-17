@@ -123,7 +123,8 @@ in packs from the Braiins Forge Nexus, cached on the device so a game works offl
 - Player names are trimmed and rendered as plain text. Nothing a phone sends is interpreted as markup or code.
 - A phone can only act on its own seat, identified by its token. It cannot answer for or rename another player.
 - The listener runs only while the widget's scene is active or a game is in progress, and closes when the widget
-  unloads.
+  unloads. While the Deck shows another scene the widget is dormant and phones get no answer; the controller page
+  names that state and asks the player to bring the scene back or turn off cycling.
 
 ### Constraints
 
