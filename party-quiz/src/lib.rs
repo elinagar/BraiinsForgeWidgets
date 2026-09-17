@@ -347,6 +347,7 @@ mod wasm_glue {
                     answered: p.answer.is_some(),
                 })
                 .collect(),
+            show_reset: true,
         }
     }
 
@@ -383,6 +384,7 @@ mod wasm_glue {
             players: game.connected().count(),
             fastest: fastest.map(|p| (p.name.clone(), points_text(p.last_gain))),
             next_in_s: REVEAL_MS.saturating_sub(elapsed_ms).div_ceil(1_000),
+            show_reset: true,
         }
     }
 
@@ -412,6 +414,7 @@ mod wasm_glue {
             is_final: false,
             status_line,
             footnote: None,
+            show_reset: true,
         }
     }
 
@@ -422,6 +425,7 @@ mod wasm_glue {
             is_final: true,
             status_line: fmt!("Host taps New game \u{b7} Lobby in {secs} s"),
             footnote: kv::get_string(KV_BEST_LINE),
+            show_reset: true,
         }
     }
 

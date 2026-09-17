@@ -42,6 +42,9 @@ in packs from the Braiins Forge Nexus, cached on the device so a game works offl
 - When the host leaves, the next player in join order becomes host.
 - Ending a game shows the podium and then returns the Deck to a fresh lobby after 30 seconds, or immediately when the
   host taps New game.
+- The host can tap **Restart** at any time to kick everyone, including themselves; the Deck returns to an empty lobby
+  and every phone goes back to the join screen on its next poll. The Deck's own Reset control in the top bar does the
+  same from the device, in every phase, for the case where the host's phone is the thing that is stuck.
 
 #### Answer on the phone, watch the Deck
 

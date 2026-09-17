@@ -188,6 +188,7 @@ fn host_action(game: &mut Game, body: &str) -> (Response, Effect) {
         Some("skip") => game.skip(token),
         Some("end") => game.end(token),
         Some("new") => game.new_game(token),
+        Some("reset") => game.restart(token),
         _ => return (Response::error(400, "bad_action"), Effect::None),
     };
     match result {
@@ -729,6 +730,11 @@ mod tests {
         assert_eq!(body_text(&r), "{\"error\":\"already_answered\"}");
         let (r, _) = handle(&mut game, &post("/host", "t=a&a=dance"), PAGE, &mut tokens);
         assert_eq!(body_text(&r), "{\"error\":\"bad_action\"}");
+        let (r, _) = handle(&mut game, &post("/host", "t=b&a=reset"), PAGE, &mut tokens);
+        assert_eq!(body_text(&r), "{\"error\":\"not_host\"}");
+        let (r, e) = handle(&mut game, &post("/host", "t=a&a=reset"), PAGE, &mut tokens);
+        assert_eq!((r.status, e), (200, Effect::GameChanged));
+        assert!(game.players().is_empty(), "restart kicks every seat");
     }
 
     #[test]

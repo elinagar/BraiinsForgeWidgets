@@ -31,6 +31,7 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::{ANSWER_COUNT, push_usize};
+use crate::screens::lobby::RESET_KEY;
 use crate::screens::parts::{CardState, answer_card, body, chip, topbar};
 use crate::theme::{
     ACCENT, ANSWER_COLORS, BG, CARD, FAINT, FONT_CAPTION, MUTED, PAGE_PAD, RULE, TEXT,
@@ -64,6 +65,8 @@ pub struct QuestionData {
     pub remaining_ms: u32,
     pub total_ms: u32,
     pub dots: Vec<PlayerDot>,
+    /// Offer the on-Deck Reset control (clears every seat). Click key `reset`.
+    pub show_reset: bool,
 }
 
 #[must_use]
@@ -89,7 +92,8 @@ pub fn question_view(width: f32, height: f32, data: &QuestionData) -> Node {
                     chip(data.difficulty, CARD, TEXT),
                 ],
                 &status,
-                None,
+                data.show_reset
+                    .then(|| button!(RESET_KEY, "Reset", style: Ghost, size: Small)),
             ),
             body(
                 22.0,
@@ -281,6 +285,7 @@ mod tests {
                     answered: false,
                 },
             ],
+            show_reset: true,
         };
         let _ = question_view(1_280.0, 480.0, &data);
         let mut empty = data;

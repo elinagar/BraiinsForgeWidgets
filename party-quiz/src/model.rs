@@ -526,6 +526,14 @@ impl Game {
         Ok(())
     }
 
+    /// Host kicks everyone: every seat is dropped and the lobby is empty.
+    /// Phones learn of it on their next poll and return to the join screen.
+    pub fn restart(&mut self, token: u64) -> Result<(), ActionError> {
+        self.require_host(token)?;
+        self.reset_all();
+        Ok(())
+    }
+
     /// Wipe every seat and return to an empty lobby (the Deck's Reset control).
     pub fn reset_all(&mut self) {
         self.players.clear();
@@ -969,6 +977,22 @@ mod tests {
         game.tick(20_000);
         let seats: Vec<usize> = game.standings().iter().map(|p| p.seat).collect();
         assert_eq!(seats, [2, 0, 1]);
+    }
+
+    #[test]
+    fn only_the_host_can_restart_and_it_kicks_everyone() {
+        let mut game = table(3, 2);
+        game.start(100).expect("start");
+        assert_eq!(game.restart(101), Err(ActionError::NotHost));
+        assert_eq!(game.restart(999), Err(ActionError::UnknownToken));
+        game.restart(100).expect("host restarts");
+        assert_eq!(game.phase(), Phase::Lobby);
+        assert!(game.players().is_empty());
+        assert_eq!(
+            game.restart(100),
+            Err(ActionError::UnknownToken),
+            "the host's seat is gone too"
+        );
     }
 
     #[test]

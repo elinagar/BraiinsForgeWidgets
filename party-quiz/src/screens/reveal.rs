@@ -31,6 +31,7 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::{ANSWER_COUNT, push_usize};
+use crate::screens::lobby::RESET_KEY;
 use crate::screens::parts::{CardState, body, chip, hspace, topbar};
 use crate::screens::question::cards;
 use crate::theme::{ACCENT, ANSWER_COLORS, BG, CARD, FONT_BODY, FONT_LABEL, MUTED, TEXT};
@@ -60,6 +61,8 @@ pub struct RevealData {
     /// Fastest correct player and their formatted points.
     pub fastest: Option<(String, String)>,
     pub next_in_s: u32,
+    /// Offer the on-Deck Reset control (clears every seat). Click key `reset`.
+    pub show_reset: bool,
 }
 
 #[must_use]
@@ -78,7 +81,8 @@ pub fn reveal_view(width: f32, height: f32, data: &RevealData) -> Node {
             topbar(
                 vec![chip(&data.category, BLUE_50, BG), chip("Answer", TEXT, BG)],
                 &status,
-                None,
+                data.show_reset
+                    .then(|| button!(RESET_KEY, "Reset", style: Ghost, size: Small)),
             ),
             body(
                 22.0,
@@ -244,6 +248,7 @@ mod tests {
             players: 4,
             fastest: Some((String::from("Marta"), String::from("980"))),
             next_in_s: 4,
+            show_reset: true,
         };
         let _ = reveal_view(1_280.0, 480.0, &data);
         let mut nobody = data;

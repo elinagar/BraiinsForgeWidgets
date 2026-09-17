@@ -31,6 +31,7 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::push_usize;
+use crate::screens::lobby::RESET_KEY;
 use crate::screens::parts::{avatar, body, chip, hspace, topbar, vspace};
 use crate::theme::{ACCENT, BG, CARD, FONT_LABEL, MUTED, TEXT};
 
@@ -61,6 +62,8 @@ pub struct StandingsData {
     pub status_line: String,
     /// Under the list, e.g. the best-ever line.
     pub footnote: Option<String>,
+    /// Offer the on-Deck Reset control (clears every seat). Click key `reset`.
+    pub show_reset: bool,
 }
 
 #[must_use]
@@ -69,7 +72,12 @@ pub fn standings_view(width: f32, height: f32, data: &StandingsData) -> Node {
     col(
         props!(width: width, height: height, background: BG),
         [
-            topbar(vec![chip(label, CARD, TEXT)], &data.status_line, None),
+            topbar(
+                vec![chip(label, CARD, TEXT)],
+                &data.status_line,
+                data.show_reset
+                    .then(|| button!(RESET_KEY, "Reset", style: Ghost, size: Small)),
+            ),
             body(
                 20.0,
                 0.0,
@@ -248,6 +256,7 @@ mod tests {
             is_final: false,
             status_line: String::from("After question 3 \u{b7} 7 to go"),
             footnote: None,
+            show_reset: true,
         };
         let _ = standings_view(1_280.0, 480.0, &data);
         let full = StandingsData {
@@ -255,6 +264,7 @@ mod tests {
             is_final: true,
             status_line: String::from("Final standings"),
             footnote: Some(String::from("Best ever on this Deck: P0, 9 420")),
+            show_reset: true,
         };
         let _ = standings_view(1_280.0, 480.0, &full);
         let nobody = StandingsData {
@@ -262,6 +272,7 @@ mod tests {
             is_final: true,
             status_line: String::new(),
             footnote: None,
+            show_reset: false,
         };
         let _ = standings_view(1_280.0, 480.0, &nobody);
     }

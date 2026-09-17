@@ -37,7 +37,7 @@ Deck's package build and the `deck deploy` harness are Nix flake outputs of that
   tells the page how often to poll: 400 ms during a question or reveal, 1 s otherwise. A token on the poll re-seats a
   returning phone.
 - **Routes.** `GET /` page; `POST /join` (`name`, `color`); `POST /answer` (`t`, `c`); `POST /host` (`t`, `a` in
-  `start|skip|end|new`); `POST /leave` (`t`); anything else 404; bodies over 1 KiB 400.
+  `start|skip|end|new|reset`); `POST /leave` (`t`); anything else 404; bodies over 1 KiB 400.
 - **Tokens.** 64-bit, two host randoms, sent as 16 hex digits, kept in the phone's `localStorage`.
 - **Questions.** `assets/questions-starter.tsv` is parsed at init, filtered by the pack and difficulty params and by
   the played-ID list in KV, shuffled with a host-seeded xorshift, and loaded into the game. Param changes mid-game mark
@@ -51,7 +51,7 @@ Deck's package build and the `deck deploy` harness are Nix flake outputs of that
   the winner's colour with a brass fanfare. Sounds are synthesized 22 kHz mono PCM under `assets/sounds/`, about
   360 KB in total. All effects are
   scene-local; `led::stop()` on unload. Sounds are gated by the *Sounds* param and follow device volume.
-- **Touch.** Only the lobby's Reset button. `on_touch` requests a frame; the click is read from `render_ui`'s result.
+- **Touch.** Only the Reset button in the top bar, shown in every phase. `on_touch` requests a frame; the click is read from `render_ui`'s result.
 
 ### Scoring
 

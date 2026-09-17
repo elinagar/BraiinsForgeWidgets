@@ -45,6 +45,7 @@ Party Quiz turns the Deck into a trivia game show. The Deck is the board; every 
 - The Deck remembers its best-ever scores and shows the record in the lobby.
 - The built-in pack has 460 questions, 46 per category. Questions are not repeated until the whole pack for the chosen
   settings has been played.
-- **Reset** in the lobby's top bar on the Deck clears every seat.
+- Stuck players or a broken round? The host's phone has **Restart** in every view; it kicks everyone, and all rejoin by
+  scanning again. The **Reset** button in the Deck's top bar does the same from the device, in any phase.
 - The game runs entirely on your Wi-Fi. Nothing about players or answers leaves the Deck.
 - On a guest network with client isolation, phones cannot reach the Deck. Join the same network the Deck uses.
