@@ -145,7 +145,7 @@ in packs from the Braiins Forge Nexus, cached on the device so a game works offl
   It uses no external resources.
 - Question packs come from the Braiins Forge Nexus at `/api/v1/data/party-quiz/…`. The Nexus corpus, its generation and
   review pipeline, and the pack endpoint are a separate deliverable tracked in the implementation plan. Until it exists,
-  the widget ships a bundled starter pack in its assets: 160 hand-reviewed questions, 16 per pack, growing toward 500.
+  the widget ships a bundled starter pack in its assets: 460 hand-reviewed questions, 46 per pack, growing toward 1 000.
 - The widget shows `Loading…` in the lobby until network info and a question pack are available, and `Offline` with an
   explanation when neither a cached pack nor the Nexus is reachable.
 - Touch on the Deck itself is limited to a Reset control in the lobby's top bar, shown once someone has joined. It

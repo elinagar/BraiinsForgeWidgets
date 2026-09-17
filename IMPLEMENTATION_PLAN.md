@@ -103,7 +103,7 @@ Validation: `cargo test -p party-quiz`, clippy on wasm32 and native with `-D war
 - [x] Standings and podium: one screen, podium blocks for the top three, ranked list for the rest, final headline
 - [x] Phase timing from `Game::tick`; early countdown end after the grace period; the host's Skip and End work
 - [x] Scores through `format_number!`; fixed font sizes; ellipsis on long labels
-- [x] Starter pack `assets/questions-starter.tsv`: 160 hand-reviewed questions, 16 per pack across the ten packs, in a
+- [x] Starter pack `assets/questions-starter.tsv`: 460 hand-reviewed questions, 46 per pack across the ten packs, in a
       tab-separated line format parsed in pure Rust (`src/pack.rs`, with shuffle and filtering). A test asserts the
       pack parses whole, IDs are unique, answers are distinct, and every pack has at least ten questions.
 - [ ] Visual check of the four Deck screens in the testbed (`just wasm::dev party-quiz`) and baselines via

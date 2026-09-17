@@ -1,3 +1,16 @@
+diff --git a/bmc-wasm-host/Cargo.toml b/bmc-wasm-host/Cargo.toml
+index 248f6d5b..230444c0 100644
+--- a/bmc-wasm-host/Cargo.toml
++++ b/bmc-wasm-host/Cargo.toml
+@@ -22,6 +22,8 @@ overlay-device-info = ["dep:bmc-overlay-device-info"]
+ overlay-settings-tray = ["dep:bmc-overlay-settings-tray"]
+ overlay-upgrade = ["dep:bmc-overlay-upgrade"]
+ profiling = ["bmc-render/profiling", "bmc-wasm-runtime/profiling"]
++# Play widget clips through the device speaker (rodio/ALSA in the runtime).
++audio = ["bmc-wasm-runtime/audio"]
+ 
+ [dependencies]
+ anyhow = { workspace = true }
 diff --git a/bmc-wasm-runtime/src/audio_registry.rs b/bmc-wasm-runtime/src/audio_registry.rs
 index 2888a53f..06b2bf03 100644
 --- a/bmc-wasm-runtime/src/audio_registry.rs
