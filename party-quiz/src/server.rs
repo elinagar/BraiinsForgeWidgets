@@ -39,11 +39,17 @@ pub const POLL_FAST_MS: u32 = 400;
 pub const POLL_SLOW_MS: u32 = 1_000;
 
 /// Header block for the controller page.
-const HTML_HEADERS: &str = "Content-Type: text/html; charset=utf-8\r\nCache-Control: max-age=3600";
+// The host writes `HTTP/1.1 <status>\r\nContent-Length: <n>\r\n<headers>\r\n` and
+// then the body, so every header line here must end with its own `\r\n`;
+// the host's final `\r\n` is the blank line before the body. Without the
+// trailing break the body is glued to the last header and browsers show
+// an empty page.
+const HTML_HEADERS: &str =
+    "Content-Type: text/html; charset=utf-8\r\nCache-Control: max-age=3600\r\n";
 /// Header block for JSON replies; the phone page is same-origin so no CORS.
 const JSON_HEADERS: &str =
-    "Content-Type: application/json; charset=utf-8\r\nCache-Control: no-store";
-const EMPTY_HEADERS: &str = "Cache-Control: no-store";
+    "Content-Type: application/json; charset=utf-8\r\nCache-Control: no-store\r\n";
+const EMPTY_HEADERS: &str = "Cache-Control: no-store\r\n";
 
 /// An inbound request as the host delivers it.
 #[derive(Clone, Copy, Debug)]
@@ -58,8 +64,8 @@ pub struct Request<'a> {
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Response {
     pub status: u16,
-    /// `\r\n`-separated header lines without a trailing newline; the host
-    /// appends `Content-Length` and the blank line.
+    /// Header lines, each terminated by `\r\n`; the host prepends
+    /// `Content-Length` and appends one more `\r\n` as the blank line.
     pub headers: &'static str,
     pub body: Vec<u8>,
 }
@@ -581,6 +587,18 @@ mod tests {
         assert_eq!(r.status, 404);
         let (r, _) = handle(&mut game, &post("/", ""), PAGE, &mut tokens);
         assert_eq!(r.status, 404);
+    }
+
+    #[test]
+    fn every_header_block_ends_with_crlf_so_the_host_can_add_the_blank_line() {
+        // Mirrors the host's framing: `Content-Length: n\r\n<headers>\r\n<body>`.
+        for headers in [HTML_HEADERS, JSON_HEADERS, EMPTY_HEADERS] {
+            assert!(headers.ends_with("\r\n"), "{headers:?}");
+            assert!(!headers.ends_with("\r\n\r\n"), "{headers:?}");
+            for line in headers.trim_end().split("\r\n") {
+                assert!(line.contains(": "), "{line:?} is not a header line");
+            }
+        }
     }
 
     #[test]

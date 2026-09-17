@@ -111,7 +111,9 @@ fn main() {
             _ => "OK",
         };
         let head = format!(
-            "HTTP/1.1 {} {}\r\nContent-Length: {}\r\n{}\r\n\r\n",
+            // Exactly the Deck host's framing: the widget's header block carries
+            // its own line endings and the host adds the single blank line.
+            "HTTP/1.1 {} {}\r\nContent-Length: {}\r\n{}\r\n",
             response.status,
             status_text,
             response.body.len(),
