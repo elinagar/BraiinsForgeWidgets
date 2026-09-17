@@ -180,7 +180,7 @@ index a12c8c81..f80df4b6 100644
              }
  
 diff --git a/workspace.nix b/workspace.nix
-index cc7bd1f9..dbccd157 100644
+index cc7bd1f9..03845c37 100644
 --- a/workspace.nix
 +++ b/workspace.nix
 @@ -491,7 +491,9 @@ let
@@ -203,3 +203,24 @@ index cc7bd1f9..dbccd157 100644
                  };
                in
                pkgs.symlinkJoin {
+@@ -631,7 +633,10 @@ let
+     inherit (deps) widgetRuntimeDeps;
+   };
+ 
+-  wasmWidgetsModule = wasmWidgetsFor bmc.profiles.armv7-glibc-release [ ];
++  # `audio`: WASM widgets play clips through the Deck speaker; the runtime
++  # opens the card per clip so the system's own sounds keep working. This is
++  # the module the deck packages ship.
++  wasmWidgetsModule = wasmWidgetsFor bmc.profiles.armv7-glibc-release [ "audio" ];
+ 
+   # Build every shippable wasm widget (has manifest.json) from `profile`, joined
+   # into a single lib/bmc-widgets/<name>/ tree (same shape as mkAllWidgets).
+@@ -677,7 +682,7 @@ let
+   # `deck deploy --profile debug` surfaces the mesh::profile timing/memory
+   # channel on the device. Package names are identical to the release set;
+   # only the build profile differs.
+-  wasmWidgetsModuleDebug = wasmWidgetsFor bmc.profiles.armv7-glibc-debug [ "profiling" ];
++  wasmWidgetsModuleDebug = wasmWidgetsFor bmc.profiles.armv7-glibc-debug [ "audio" "profiling" ];
+   armv7PackageDefsDebug = import ./nix/packages.nix {
+     inherit bmc armv7Pkgs deps;
+     inherit wasmWidgetCatalog;
