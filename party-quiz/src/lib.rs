@@ -256,6 +256,12 @@ mod wasm_glue {
             GAME.with_borrow_mut(|game| server::handle(game, &request, CONTROLLER_PAGE, &mut mint));
         req.respond(response.status, response.headers, &response.body);
         if effect == Effect::GameChanged {
+            // A restart empties the table; drop any LED effect right away rather
+            // than on the next frame, which never comes while the scene is off screen.
+            let emptied = GAME.with_borrow(|game| game.players().is_empty());
+            if emptied {
+                effects::shutdown();
+            }
             request_frame();
         }
     }
@@ -500,6 +506,7 @@ mod wasm_glue {
         let result = render_ui(ws.width, ws.height, tree);
         if result.clicks.contains_key(RESET_KEY) {
             GAME.with_borrow_mut(Game::reset_all);
+            effects::shutdown();
             request_frame();
         }
         request_frame_after(next_frame_ms);

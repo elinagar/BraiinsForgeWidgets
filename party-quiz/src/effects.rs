@@ -218,5 +218,12 @@ fn correct_share(game: &Game) -> (usize, usize) {
 }
 
 fn play(audio: &Audio, volume: Volume) {
-    audio_play(ensure_audio_registered(audio), volume);
+    let id = ensure_audio_registered(audio);
+    if id.is_none() {
+        // The host refused or could not find the packaged sample; say which,
+        // since a silent widget is otherwise indistinguishable from a muted one.
+        let name = audio.name;
+        log_warn!("party-quiz: audio `{name}` not registered; clip dropped");
+    }
+    audio_play(id, volume);
 }
