@@ -1,0 +1,162 @@
+# Party Quiz starter pack. Tab-separated: id, category, difficulty, question, four answers, correct index (0-3), why.
+# Reviewed by hand; grow toward 500 with the Nexus pipeline. Keep questions under 120 characters and answers under 32.
+science-001	Science	easy	What gas do plants take in from the air to make their food?	Oxygen	Carbon dioxide	Nitrogen	Helium	1	Photosynthesis turns CO2 and water into sugar.
+science-002	Science	easy	How many planets orbit the Sun?	7	9	8	10	2	Eight since Pluto was reclassified in 2006.
+science-003	Science	medium	Which planet has the shortest day, spinning once in under ten hours?	Mars	Jupiter	Venus	Saturn	1	Jupiter spins once every 9 h 56 min.
+science-004	Science	medium	What is the chemical symbol for gold?	Gd	Go	Ag	Au	3	From the Latin aurum.
+science-005	Science	easy	What is the boiling point of water at sea level in Celsius?	90	100	110	120	1	
+science-006	Science	hard	Which particle carries the electromagnetic force?	Gluon	Photon	Neutrino	Boson W	1	Photons are the quanta of light.
+science-007	Science	medium	What is the hardest natural substance?	Quartz	Diamond	Steel	Titanium	1	Diamond scores 10 on the Mohs scale.
+science-008	Science	medium	Roughly how long does sunlight take to reach Earth?	8 seconds	8 minutes	8 hours	8 days	1	About 8 minutes and 20 seconds.
+science-009	Science	hard	What is the most abundant element in the universe?	Oxygen	Carbon	Hydrogen	Helium	2	About three quarters of all normal matter by mass.
+science-010	Science	easy	Which organ pumps blood around the human body?	Liver	Lungs	Heart	Kidney	2	
+science-011	Science	medium	How many bones does an adult human have?	106	186	206	306	2	
+science-012	Science	hard	What is absolute zero in Celsius, to the nearest degree?	-100	-273	-373	-459	1	-273.15 C, or 0 kelvin.
+science-013	Science	medium	Which blood type is the universal donor for red cells?	AB positive	O negative	A positive	B negative	1	
+science-014	Science	easy	What force pulls objects toward the centre of the Earth?	Magnetism	Friction	Gravity	Inertia	2	
+science-015	Science	hard	What is the speed of light in a vacuum, in km per second?	150,000	300,000	1,000,000	30,000	1	299,792 km/s.
+science-016	Science	medium	Which vitamin does the skin make from sunlight?	Vitamin A	Vitamin C	Vitamin D	Vitamin K	2	
+geography-001	Geography	easy	What is the capital of Australia?	Sydney	Melbourne	Canberra	Perth	2	Canberra was purpose-built as a compromise capital.
+geography-002	Geography	easy	Which is the largest ocean?	Atlantic	Indian	Arctic	Pacific	3	
+geography-003	Geography	medium	Which river is the longest in Africa?	Congo	Nile	Niger	Zambezi	1	
+geography-004	Geography	medium	How many countries border Germany?	5	7	9	11	2	Nine: DK, PL, CZ, AT, CH, FR, LU, BE, NL.
+geography-005	Geography	easy	Mount Everest sits on the border of Nepal and which country?	India	Bhutan	China	Pakistan	2	
+geography-006	Geography	hard	What is the capital of Canada?	Toronto	Vancouver	Montreal	Ottawa	3	
+geography-007	Geography	medium	Which country has the most time zones, overseas territories included?	Russia	USA	France	China	2	France spans 12 time zones thanks to its territories.
+geography-008	Geography	easy	Which continent is the Sahara Desert on?	Asia	Africa	Australia	South America	1	
+geography-009	Geography	hard	Which is the smallest country in the world by area?	Monaco	Vatican City	San Marino	Liechtenstein	1	About 0.44 square kilometres.
+geography-010	Geography	medium	What is the capital of Czechia?	Brno	Bratislava	Prague	Ostrava	2	
+geography-011	Geography	medium	Which country is both in Europe and Asia, with Istanbul on the divide?	Greece	Turkey	Russia	Georgia	1	
+geography-012	Geography	hard	Lake Baikal, the deepest lake on Earth, is in which country?	Mongolia	Kazakhstan	Russia	China	2	Over 1,600 metres deep.
+geography-013	Geography	easy	What is the largest country by area?	Canada	China	USA	Russia	3	
+geography-014	Geography	medium	Which city is known as the City of Canals?	Amsterdam	Venice	Bruges	Stockholm	1	
+geography-015	Geography	hard	Which two countries share the longest international border?	USA and Mexico	Russia and China	USA and Canada	Argentina and Chile	2	About 8,900 km.
+geography-016	Geography	easy	Which country is shaped like a boot?	Spain	Italy	Portugal	Greece	1	
+history-001	History	easy	In which year did the first person walk on the Moon?	1965	1969	1972	1975	1	Apollo 11, 20 July 1969.
+history-002	History	medium	Who was the first President of the United States?	Thomas Jefferson	John Adams	George Washington	Benjamin Franklin	2	
+history-003	History	medium	The Berlin Wall fell in which year?	1985	1987	1989	1991	2	
+history-004	History	hard	Which empire was ruled by Genghis Khan?	Ottoman	Mongol	Persian	Roman	1	
+history-005	History	easy	Which ancient civilisation built the pyramids of Giza?	Romans	Greeks	Egyptians	Aztecs	2	
+history-006	History	medium	The Titanic sank in which year?	1905	1912	1918	1923	1	On its maiden voyage, April 1912.
+history-007	History	hard	Who was the first woman to win a Nobel Prize?	Marie Curie	Rosalind Franklin	Lise Meitner	Ada Lovelace	0	Physics, 1903; she won Chemistry in 1911 too.
+history-008	History	medium	Which wall was built to keep out northern tribes from China?	Hadrian's Wall	Great Wall of China	Berlin Wall	Western Wall	1	
+history-009	History	easy	Which war ended in 1945?	World War I	World War II	Korean War	Vietnam War	1	
+history-010	History	hard	Who painted the ceiling of the Sistine Chapel?	Leonardo da Vinci	Raphael	Michelangelo	Donatello	2	Between 1508 and 1512.
+history-011	History	medium	The Velvet Revolution of 1989 took place in which country?	Poland	Hungary	Czechoslovakia	Romania	2	
+history-012	History	hard	Which year did the French Revolution begin?	1776	1789	1799	1815	1	The Bastille fell on 14 July 1789.
+history-013	History	easy	Who was the famous queen of ancient Egypt who allied with Julius Caesar?	Nefertiti	Hatshepsut	Cleopatra	Isis	2	
+history-014	History	medium	Gutenberg's printing press appeared in which century?	13th	14th	15th	16th	2	Around 1440.
+history-015	History	hard	Which explorer's crew first sailed around the world?	Columbus	Magellan	Cook	Vasco da Gama	1	Magellan died en route; Elcano finished in 1522.
+history-016	History	easy	Which country gifted the Statue of Liberty to the USA?	Spain	France	England	Italy	1	
+entertainment-001	Film & Music	easy	Which band sang 'Hey Jude'?	The Rolling Stones	The Beatles	Queen	ABBA	1	
+entertainment-002	Film & Music	medium	Who directed 'Jurassic Park' (1993)?	George Lucas	James Cameron	Steven Spielberg	Ridley Scott	2	
+entertainment-003	Film & Music	easy	What is the name of the wizard school in Harry Potter?	Durmstrang	Hogwarts	Beauxbatons	Ilvermorny	1	
+entertainment-004	Film & Music	medium	Which film won the first Academy Award for Best Picture?	Wings	Sunrise	Metropolis	The Jazz Singer	0	At the first ceremony in 1929.
+entertainment-005	Film & Music	hard	Who composed the opera 'The Magic Flute'?	Beethoven	Mozart	Verdi	Wagner	1	Premiered in Vienna in 1791.
+entertainment-006	Film & Music	easy	In 'The Lion King', what kind of animal is Timon?	Warthog	Meerkat	Hyena	Lemur	1	
+entertainment-007	Film & Music	medium	Which singer is known as the Queen of Pop?	Beyoncé	Madonna	Lady Gaga	Cher	1	
+entertainment-008	Film & Music	medium	How many strings does a standard guitar have?	4	5	6	7	2	
+entertainment-009	Film & Music	hard	Which 1994 film features a bus that must stay above 50 mph?	Die Hard	Speed	Heat	Crimson Tide	1	
+entertainment-010	Film & Music	easy	Which superhero is from Krypton?	Batman	Spider-Man	Superman	Thor	2	
+entertainment-011	Film & Music	medium	Who played Jack in 'Titanic' (1997)?	Brad Pitt	Leonardo DiCaprio	Matt Damon	Johnny Depp	1	
+entertainment-012	Film & Music	hard	Which composer wrote 'The Four Seasons'?	Bach	Handel	Vivaldi	Haydn	2	Antonio Vivaldi, around 1720.
+entertainment-013	Film & Music	easy	What colour is the Pixar lamp in the studio's logo?	Red	Blue	White	Yellow	2	
+entertainment-014	Film & Music	medium	Which TV series is set in the fictional town of Hawkins, Indiana?	Riverdale	Stranger Things	Twin Peaks	Dark	1	
+entertainment-015	Film & Music	hard	Which instrument has 88 keys?	Organ	Accordion	Piano	Harpsichord	2	
+entertainment-016	Film & Music	easy	Which animated film features a snowman named Olaf?	Moana	Frozen	Tangled	Coco	1	
+sport-001	Sport	easy	How many players does a football (soccer) team have on the pitch?	9	10	11	12	2	
+sport-002	Sport	medium	Which country hosted the 2016 Summer Olympics?	China	Brazil	UK	Japan	1	Rio de Janeiro.
+sport-003	Sport	medium	In tennis, what is a score of zero called?	Nil	Love	Duck	Blank	1	
+sport-004	Sport	hard	How long is a marathon, to the nearest kilometre?	40 km	42 km	45 km	50 km	1	42.195 km.
+sport-005	Sport	easy	In which sport do you use a puck?	Lacrosse	Curling	Ice hockey	Polo	2	
+sport-006	Sport	medium	How many rings are on the Olympic flag?	4	5	6	7	1	
+sport-007	Sport	hard	Which country has won the most FIFA World Cups?	Germany	Italy	Argentina	Brazil	3	Five titles.
+sport-008	Sport	easy	How many holes are played in a full round of golf?	9	12	18	24	2	
+sport-009	Sport	medium	Which Grand Slam tennis tournament is played on grass?	US Open	Roland Garros	Wimbledon	Australian Open	2	
+sport-010	Sport	hard	In Formula 1, what colour flag means the race is stopped?	Yellow	Black	Red	Chequered	2	
+sport-011	Sport	medium	How many points is a touchdown worth in American football?	3	5	6	7	2	
+sport-012	Sport	easy	Which sport is played at the Tour de France?	Running	Cycling	Rowing	Sailing	1	
+sport-013	Sport	hard	In chess, which piece can only move diagonally?	Rook	Knight	Bishop	Queen	2	
+sport-014	Sport	medium	How many players are on a basketball team on court?	4	5	6	7	1	
+sport-015	Sport	easy	What do you call a score of three goals by one player in a match?	Triple	Hat-trick	Trio	Treble	1	
+sport-016	Sport	hard	Which nation invented ice hockey's modern rules?	USA	Canada	Sweden	Russia	1	Montreal, 1870s.
+food-001	Food & Drink	easy	Which country does sushi come from?	China	Thailand	Japan	Korea	2	
+food-002	Food & Drink	medium	What is the main ingredient of guacamole?	Tomato	Avocado	Pepper	Lime	1	
+food-003	Food & Drink	medium	Which cheese is traditionally used on a Margherita pizza?	Cheddar	Gouda	Mozzarella	Feta	2	
+food-004	Food & Drink	hard	What is the most expensive spice by weight?	Vanilla	Cardamom	Saffron	Cloves	2	Each crocus flower yields only three threads.
+food-005	Food & Drink	easy	What is the main ingredient of hummus?	Lentils	Chickpeas	Beans	Peas	1	
+food-006	Food & Drink	medium	Which nut is used to make marzipan?	Walnut	Hazelnut	Almond	Pistachio	2	
+food-007	Food & Drink	hard	Which country drinks the most coffee per person?	Italy	USA	Finland	Brazil	2	About 12 kg per person a year.
+food-008	Food & Drink	easy	Which fruit is dried to make raisins?	Plums	Grapes	Apricots	Figs	1	
+food-009	Food & Drink	medium	What is the Czech dish 'svíčková' made from?	Pork	Chicken	Beef	Fish	2	Beef sirloin in a cream vegetable sauce.
+food-010	Food & Drink	hard	Which grain is used to make traditional Japanese sake?	Barley	Wheat	Rice	Millet	2	
+food-011	Food & Drink	easy	What colour is a ripe banana?	Green	Yellow	Red	Blue	1	
+food-012	Food & Drink	medium	Which country is the origin of the croissant's ancestor, the kipferl?	France	Austria	Italy	Belgium	1	Vienna; the French made it flaky.
+food-013	Food & Drink	hard	What is the main flavour of the liqueur amaretto?	Cherry	Almond	Orange	Coffee	1	
+food-014	Food & Drink	medium	Tofu is made from which plant?	Rice	Wheat	Soybean	Corn	2	
+food-015	Food & Drink	easy	Which drink is made from fermented grapes?	Beer	Wine	Cider	Mead	1	
+food-016	Food & Drink	hard	Which Italian city gives its name to a raw-beef dish 'alla ...'?	Milan	Florence	Bologna	Piedmont	3	Carne cruda all'albese is a Piedmont dish; carpaccio is Venetian.
+animals-001	Animals	easy	What is the largest animal on Earth?	Elephant	Blue whale	Giraffe	Great white shark	1	
+animals-002	Animals	medium	How many hearts does an octopus have?	1	2	3	4	2	Two pump to the gills, one to the body.
+animals-003	Animals	easy	Which bird is the symbol of peace?	Eagle	Dove	Owl	Swan	1	
+animals-004	Animals	medium	What is a group of lions called?	Herd	Pack	Pride	Flock	2	
+animals-005	Animals	hard	Which mammal lays eggs?	Bat	Platypus	Sloth	Armadillo	1	Along with the echidnas, the only egg-laying mammals.
+animals-006	Animals	easy	How many legs does a spider have?	6	8	10	12	1	
+animals-007	Animals	medium	Which animal is the fastest on land?	Lion	Greyhound	Cheetah	Pronghorn	2	Up to about 110 km/h in short bursts.
+animals-008	Animals	hard	How long can a camel go without drinking in cool weather?	1 day	3 days	1 week	Several weeks	3	
+animals-009	Animals	easy	Which animal is known for changing colour to match its surroundings?	Frog	Chameleon	Gecko	Iguana	1	
+animals-010	Animals	medium	Which is the largest species of penguin?	King	Gentoo	Emperor	Adélie	2	
+animals-011	Animals	hard	What is the only bird that can fly backwards?	Swift	Hummingbird	Kingfisher	Sparrow	1	
+animals-012	Animals	easy	What do bees make from nectar?	Wax	Honey	Pollen	Jelly	1	
+animals-013	Animals	medium	Which animal has the longest lifespan among land mammals?	Horse	Elephant	Human	Gorilla	2	
+animals-014	Animals	hard	How many stomach chambers does a cow have?	1	2	3	4	3	
+animals-015	Animals	easy	Which big cat has stripes?	Leopard	Tiger	Jaguar	Cheetah	1	
+animals-016	Animals	medium	Which sea creature has blue blood?	Dolphin	Octopus	Seal	Tuna	1	Copper-based haemocyanin instead of iron.
+tech-001	Technology	easy	What does 'WWW' stand for?	World Wide Web	Wide World Web	World Web Wide	Web World Wide	0	
+tech-002	Technology	medium	Who co-founded Apple with Steve Jobs in 1976?	Bill Gates	Steve Wozniak	Steve Ballmer	Larry Page	1	
+tech-003	Technology	medium	How many bits are in a byte?	4	8	16	32	1	
+tech-004	Technology	hard	Which programming language is named after a British comedy group?	Ruby	Python	Perl	Java	1	Monty Python's Flying Circus.
+tech-005	Technology	easy	What does 'USB' stand for?	Universal Serial Bus	United Serial Bus	Universal System Bus	Unified Serial Board	0	
+tech-006	Technology	medium	In which year was the first iPhone released?	2005	2007	2009	2010	1	
+tech-007	Technology	hard	Who is considered the first computer programmer?	Alan Turing	Ada Lovelace	Charles Babbage	Grace Hopper	1	Her notes on Babbage's Analytical Engine, 1843.
+tech-008	Technology	easy	What does the 'S' in HTTPS stand for?	Simple	Secure	Server	Standard	1	
+tech-009	Technology	medium	Which company created the Android operating system?	Apple	Google	Microsoft	Samsung	1	Google bought Android Inc. in 2005.
+tech-010	Technology	hard	What was the name of the first electronic general-purpose computer, built in 1945?	UNIVAC	ENIAC	Colossus	Z3	1	
+tech-011	Technology	medium	What does 'CPU' stand for?	Central Process Unit	Central Processing Unit	Computer Processing Unit	Core Processing Unit	1	
+tech-012	Technology	easy	Which social network is known for 280-character posts?	Facebook	Instagram	X (Twitter)	LinkedIn	2	
+tech-013	Technology	hard	Which language runs natively in web browsers?	Python	JavaScript	Rust	C#	1	
+tech-014	Technology	medium	What does 'Wi-Fi' technology mainly use to transmit data?	Infrared	Radio waves	Ultrasound	Laser	1	
+tech-015	Technology	easy	What is the name of the small picture that represents a program?	Widget	Icon	Emblem	Badge	1	
+tech-016	Technology	hard	Which company made the first commercially successful graphical web browser, Navigator?	Microsoft	Netscape	Mozilla	AOL	1	
+bitcoin-001	Bitcoin	easy	Who is credited with creating Bitcoin?	Vitalik Buterin	Satoshi Nakamoto	Hal Finney	Nick Szabo	1	A pseudonym; the identity is unknown.
+bitcoin-002	Bitcoin	easy	What is the smallest unit of Bitcoin called?	Bit	Satoshi	Wei	Finney	1	One hundred million satoshis make one bitcoin.
+bitcoin-003	Bitcoin	medium	What is the maximum number of bitcoins that will ever exist?	1 million	21 million	100 million	Unlimited	1	
+bitcoin-004	Bitcoin	medium	Roughly how often is a new Bitcoin block found?	Every minute	Every 10 minutes	Every hour	Every day	1	
+bitcoin-005	Bitcoin	hard	In which year was the Bitcoin genesis block mined?	2008	2009	2010	2011	1	3 January 2009.
+bitcoin-006	Bitcoin	medium	What happens at a Bitcoin halving?	Fees double	Block reward halves	Block time halves	Supply doubles	1	
+bitcoin-007	Bitcoin	hard	How many blocks are there between halvings?	100,000	210,000	420,000	1,000,000	1	Roughly every four years.
+bitcoin-008	Bitcoin	easy	What is the name of the digital ledger Bitcoin runs on?	Database	Spreadsheet	Blockchain	Cloud	2	
+bitcoin-009	Bitcoin	medium	What did Laszlo Hanyecz famously buy for 10,000 BTC in 2010?	A car	Two pizzas	A laptop	A house	1	Celebrated every 22 May as Bitcoin Pizza Day.
+bitcoin-010	Bitcoin	hard	Which hashing algorithm does Bitcoin mining use?	SHA-1	SHA-256	Scrypt	Ethash	1	
+bitcoin-011	Bitcoin	medium	What is a 'mempool'?	A mining pool	Waiting unconfirmed transactions	A wallet backup	A memory chip	1	
+bitcoin-012	Bitcoin	easy	What do miners receive for adding a block?	Nothing	Block reward and fees	A vote	A new coin type	1	
+bitcoin-013	Bitcoin	hard	What does 'HODL' come from?	Hold On for Dear Life	A misspelling of 'hold'	Hash Output Data Ledger	A wallet brand	1	A 2013 forum post titled 'I AM HODLING'.
+bitcoin-014	Bitcoin	medium	How often does Bitcoin's mining difficulty adjust?	Every block	Every 2,016 blocks	Every 210,000 blocks	Once a year	1	About every two weeks.
+bitcoin-015	Bitcoin	hard	What is the Lightning Network?	A faster hashing chip	A layer for fast, cheap payments	A mining pool	A hardware wallet	1	
+bitcoin-016	Bitcoin	easy	What does a 'cold wallet' mean?	A wallet in a fridge	Keys kept offline	An empty wallet	A wallet on an exchange	1	
+kids-001	Kids	easy	How many days are in a week?	5	6	7	8	2	
+kids-002	Kids	easy	What colour do you get by mixing blue and yellow?	Purple	Green	Orange	Brown	1	
+kids-003	Kids	easy	Which animal says 'moo'?	Sheep	Cow	Pig	Duck	1	
+kids-004	Kids	easy	How many sides does a triangle have?	2	3	4	5	1	
+kids-005	Kids	medium	What is the largest planet in our solar system?	Earth	Saturn	Jupiter	Neptune	2	
+kids-006	Kids	easy	What do caterpillars turn into?	Bees	Butterflies	Beetles	Birds	1	
+kids-007	Kids	medium	How many minutes are in one hour?	30	60	90	100	1	
+kids-008	Kids	easy	Which season comes after summer?	Spring	Winter	Autumn	Monsoon	2	
+kids-009	Kids	medium	What is frozen water called?	Steam	Ice	Fog	Snowman	1	
+kids-010	Kids	easy	Which shape has no corners?	Square	Triangle	Circle	Rectangle	2	
+kids-011	Kids	medium	How many letters are in the English alphabet?	24	25	26	27	2	
+kids-012	Kids	easy	Which fruit is red and grows on trees, often in pies?	Banana	Apple	Grape	Melon	1	
+kids-013	Kids	medium	What do you call a baby dog?	Kitten	Puppy	Calf	Cub	1	
+kids-014	Kids	easy	Which is the closest star to Earth?	The Moon	The Sun	Mars	Polaris	1	
+kids-015	Kids	medium	How many zeros are in one thousand?	2	3	4	5	1	
+kids-016	Kids	hard	Which planet is known as the Red Planet?	Venus	Mars	Mercury	Jupiter	1	

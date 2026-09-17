@@ -1,0 +1,24 @@
+[package]
+name = "party-quiz"
+version = "0.1.0"
+edition = "2024"
+license = "GPL-3.0-or-later"
+
+# SVG and HTML assets embedded at compile time; the nix source filter keeps
+# only rust/toml/lock unless opted in here.
+[package.metadata.nix]
+include = ["assets/**"]
+
+# `lib` (native rlib) beside the wasm `cdylib`, so the game model and the
+# screens can be unit-tested off-device.
+[lib]
+crate-type = ["cdylib", "lib"]
+
+[dependencies]
+# The Deck SDK, pinned to the bmc-main commit that matches firmware 26.09.
+# `scripts/sync-to-bmc-main.sh` rewrites this to the in-tree path when the
+# crate is copied into bmc-main for deployment.
+bmc-wasm-sdk = { git = "https://github.com/BraiinsForge/bmc-main.git", rev = "9019fd35" }
+
+[lints]
+workspace = true

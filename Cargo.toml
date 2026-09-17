@@ -1,0 +1,32 @@
+# Widgets for the Braiins Deck, one crate per widget. Each builds to
+# wasm32-unknown-unknown against the bmc-main SDK and is deployed by copying
+# it into a bmc-main checkout (see scripts/sync-to-bmc-main.sh).
+[workspace]
+resolver = "3"
+members = ["party-quiz"]
+
+# Same lint set as bmc-main's production widget workspace, so a crate that is
+# clean here is clean there.
+[workspace.lints.rust]
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+doc_markdown = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"
+pedantic = { level = "warn", priority = -1 }
+unwrap_used = "warn"
+
+# Widgets are tiny wasm binaries optimized for size.
+[profile.dev]
+opt-level = "z"
+lto = true
+panic = "abort"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "z"
+panic = "abort"
+strip = true

@@ -1,0 +1,92 @@
+{
+  "$schema": "https://raw.githubusercontent.com/BraiinsForge/bmc-main/master/bmc-widget-manifest/manifest.schema.json",
+  "uid": "f4ebfd1d-6984-4c42-bf4b-35c2edc6a36d",
+  "version": "0.1.0",
+  "name": "Party Quiz",
+  "subname": "Phones as buzzers",
+  "description": "Multiplayer trivia board: players join from their phones by scanning the Deck, the Deck shows questions, countdown, reveal and podium",
+  "author": {
+    "name": "Braiins Forge",
+    "url": "https://braiinsforge.com"
+  },
+  "binary": "bin/party-quiz",
+  "icon": "assets/icon.svg",
+  "category": "utility",
+  "config_help": "Players scan the QR code shown in the lobby with their phone camera. The first player to join hosts the game and starts it from their phone. Questions are downloaded from Braiins Forge and cached on the Deck, so a game also works without internet once a pack has been downloaded.",
+  "settings": [
+    "localization",
+    "nightMode"
+  ],
+  "supported_viewports": [
+    {
+      "type": "rectangular",
+      "min_width": 1280,
+      "max_width": 1280,
+      "min_height": 480,
+      "max_height": 480
+    }
+  ],
+  "params": {
+    "category_pack": {
+      "name": "Category pack",
+      "description": "Which question pack the game draws from",
+      "type": "string",
+      "default_value": "mixed",
+      "enum_values": [
+        { "value": "mixed", "label": "Mixed" },
+        { "value": "science", "label": "Science and space" },
+        { "value": "geography", "label": "Geography" },
+        { "value": "history", "label": "History" },
+        { "value": "entertainment", "label": "Film, TV and music" },
+        { "value": "sport", "label": "Sport" },
+        { "value": "food", "label": "Food and drink" },
+        { "value": "animals", "label": "Animals and nature" },
+        { "value": "tech", "label": "Technology" },
+        { "value": "bitcoin", "label": "Bitcoin and mining" },
+        { "value": "kids", "label": "Kids" }
+      ]
+    },
+    "difficulty": {
+      "name": "Difficulty",
+      "description": "How hard the questions are",
+      "type": "string",
+      "default_value": "mixed",
+      "enum_values": [
+        { "value": "easy", "label": "Easy" },
+        { "value": "medium", "label": "Medium" },
+        { "value": "hard", "label": "Hard" },
+        { "value": "mixed", "label": "Mixed" }
+      ]
+    },
+    "question_count": {
+      "name": "Questions per game",
+      "description": "How many questions one game has",
+      "type": "integer",
+      "default_value": 10,
+      "min": 5,
+      "max": 30,
+      "step": 5
+    },
+    "answer_time": {
+      "name": "Answer time",
+      "description": "Seconds players have to answer each question",
+      "type": "integer",
+      "default_value": 20,
+      "min": 10,
+      "max": 40,
+      "step": 5
+    },
+    "show_player_names": {
+      "name": "Show player names on Deck",
+      "description": "Show player names next to avatars on the Deck; off shows colours only",
+      "type": "boolean",
+      "default_value": true
+    },
+    "sounds": {
+      "name": "Sounds",
+      "description": "Play countdown ticks, reveal chimes and the podium fanfare",
+      "type": "boolean",
+      "default_value": true
+    }
+  }
+}

@@ -1,0 +1,4 @@
+/target
+/party-quiz/target
+*.orig
+.DS_Store

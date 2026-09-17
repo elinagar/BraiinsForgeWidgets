@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0e0f12">
+<title>Party Quiz</title>
+<style>
+:root{--bg:#0e0f12;--card:#15171c;--rule:#2a2d34;--text:#f4f1ea;--muted:#a8a49a;--faint:#6e6a62;--accent:#f5a524;
+--coral:#e5533d;--blue:#3b82f6;--lime:#84cc16;--violet:#a855f7;--amber:#f5a524;--teal:#14b8a6}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:16px/1.4 -apple-system,"Segoe UI",Roboto,system-ui,sans-serif;
+padding:calc(16px + env(safe-area-inset-top)) 18px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px;min-height:100%}
+h1{font-size:34px;line-height:1.1;margin:0}h2{font-size:22px;margin:0}
+.kicker{font-size:13px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.muted{color:var(--muted)}.faint{color:var(--faint);font-size:13px;text-align:center}
+.view{display:none;flex-direction:column;gap:14px;flex:1}.view.on{display:flex}
+label{font-size:14px;color:var(--muted)}
+input[type=text]{width:100%;height:56px;padding:0 16px;border-radius:14px;border:1px solid var(--rule);background:var(--card);color:var(--text);font-size:20px}
+.btn{height:58px;border-radius:16px;border:0;font-size:19px;font-weight:700;color:#0e0f12;background:var(--accent);width:100%}
+.btn.ghost{background:var(--card);color:var(--text);border:1px solid var(--rule)}
+.btn:disabled{opacity:.45}
+.swatches{display:flex;gap:10px;flex-wrap:wrap}
+.sw{width:50px;height:50px;border-radius:50%;border:0;opacity:.4}
+.sw.sel{opacity:1;outline:4px solid var(--text);outline-offset:-4px}
+.sw:disabled{opacity:.15}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.me{display:flex;align-items:center;gap:10px;font-weight:600}
+.dot{width:28px;height:28px;border-radius:50%;display:inline-block;flex:none}
+.bar{height:8px;border-radius:4px;background:var(--card);overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent);width:100%}
+.grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;min-height:280px}
+.ans{border:0;border-radius:18px;display:flex;align-items:center;justify-content:center}
+.ans svg{width:44%;height:44%}.ans.dim{opacity:.25}.ans.sel{outline:5px solid var(--text);outline-offset:-5px}
+.card{background:var(--card);border-radius:14px;padding:14px 16px}
+.stats{display:flex;gap:10px}.stats .card{flex:1;text-align:center}.stats b{display:block;font-size:24px}
+.big{width:110px;height:110px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center}
+.center{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px;justify-content:center;flex:1}
+ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+li{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:12px;padding:10px 14px}
+li .n{flex:1;font-weight:600}li .s{font-weight:700}li .g{color:var(--lime);font-size:14px}
+.host{display:flex;gap:10px}.host .btn{height:50px;font-size:16px}
+.err{color:var(--coral);min-height:20px;font-size:14px}
+.spacer{flex:1}
+</style>
+</head>
+<body>
+
+<section id="v-join" class="view on">
+  <div class="kicker">Braiins Deck</div>
+  <h1>Join the quiz</h1>
+  <div id="j-count" class="muted">Connecting to the Deck…</div>
+  <label for="nick">Your name</label>
+  <input id="nick" type="text" maxlength="12" autocomplete="nickname" placeholder="Name">
+  <label>Pick your colour</label>
+  <div id="swatches" class="swatches"></div>
+  <div id="j-err" class="err"></div>
+  <div class="spacer"></div>
+  <button id="join" class="btn" type="button">Join game</button>
+  <div class="faint">Nothing leaves your Wi-Fi. No account needed.</div>
+</section>
+
+<section id="v-lobby" class="view">
+  <div class="row"><div class="me"><span id="l-dot" class="dot"></span><span id="l-name"></span></div><span id="l-count" class="muted"></span></div>
+  <h1>You're in</h1>
+  <p class="muted">Look at the Deck. The game starts when the host taps Start.</p>
+  <ol id="l-players"></ol>
+  <div class="spacer"></div>
+  <div id="l-host" class="host" hidden>
+    <button id="start" class="btn" type="button">Start game</button>
+  </div>
+  <div id="l-why" class="faint"></div>
+  <button id="leave" class="btn ghost" type="button">Leave</button>
+</section>
+
+<section id="v-answer" class="view">
+  <div class="row"><div class="me"><span id="a-dot" class="dot"></span><span id="a-name"></span></div><span id="a-q" class="muted"></span></div>
+  <div class="bar"><i id="a-bar"></i></div>
+  <div class="muted">Look at the Deck, then tap the matching shape.</div>
+  <div id="grid" class="grid"></div>
+  <div id="a-host" class="host" hidden><button id="skip" class="btn ghost" type="button">Skip question</button><button id="end" class="btn ghost" type="button">End game</button></div>
+  <div class="faint">Faster answers score more</div>
+</section>
+
+<section id="v-result" class="view">
+  <div class="row"><div class="me"><span id="r-dot" class="dot"></span><span id="r-name"></span></div><span id="r-q" class="muted"></span></div>
+  <div class="center">
+    <div id="r-big" class="big"></div>
+    <h1 id="r-title"></h1>
+    <div id="r-sub" class="muted"></div>
+    <div class="stats">
+      <div class="card"><span class="kicker">Points</span><b id="r-gain"></b></div>
+      <div class="card"><span class="kicker">Rank</span><b id="r-rank"></b></div>
+      <div class="card"><span class="kicker">Streak</span><b id="r-streak"></b></div>
+    </div>
+  </div>
+  <ol id="r-players"></ol>
+  <div id="r-host" class="host" hidden><button id="skip2" class="btn ghost" type="button">Next</button><button id="end2" class="btn ghost" type="button">End game</button></div>
+  <div id="r-foot" class="faint"></div>
+</section>
+
+<section id="v-podium" class="view">
+  <div class="kicker">Final standings</div>
+  <h1 id="p-title">Game over</h1>
+  <ol id="p-players"></ol>
+  <div class="spacer"></div>
+  <div id="p-host" class="host" hidden><button id="newgame" class="btn" type="button">New game</button></div>
+  <div class="faint">The Deck returns to the lobby shortly.</div>
+</section>
+
+<script>
+(function(){
+"use strict";
+var COLORS={coral:"#e5533d",blue:"#3b82f6",lime:"#84cc16",violet:"#a855f7",amber:"#f5a524",teal:"#14b8a6"};
+var ORDER=["coral","blue","lime","violet","amber","teal"];
+var ANS=[["#e5533d","M17 4 L31 30 L3 30 Z"],["#3b82f6","M17 3 L31 17 L17 31 L3 17 Z"],["#f5a524","M17 17 m-13 0 a13 13 0 1 0 26 0 a13 13 0 1 0 -26 0"],["#84cc16","M4 4 h26 v26 h-26 z"]];
+var LABELS=["triangle","diamond","circle","square"];
+var $=function(id){return document.getElementById(id)};
+var state=null,token=null,me=null,pickedColor=null,deadline=0,total=1,timer=null,pollTimer=null,lastV=-1;
+try{token=localStorage.getItem("deckquiz_token")}catch(e){}
+
+function show(id){document.querySelectorAll(".view").forEach(function(v){v.classList.toggle("on",v.id===id)})}
+function post(path,body){return fetch(path,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},body:body}).then(function(r){return r.json().catch(function(){return {}}).then(function(j){j._status=r.status;return j})})}
+function q(o){return Object.keys(o).map(function(k){return encodeURIComponent(k)+"="+encodeURIComponent(o[k])}).join("&")}
+function shape(i,extra){var a=ANS[i];return '<button type="button" class="ans '+(extra||"")+'" data-i="'+i+'" style="background:'+a[0]+'" aria-label="Answer '+(i+1)+', '+LABELS[i]+'"><svg viewBox="0 0 34 34" aria-hidden="true"><path d="'+a[1]+'" fill="#0e0f12"/></svg></button>'}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function meDot(pref){var d=$(pref+"-dot"),n=$(pref+"-name");if(!me)return;d.style.background=COLORS[me.color]||"#888";n.textContent=me.name}
+function playersList(el,players,showGain){el.innerHTML=players.map(function(p,i){return '<li><span class="dot" style="background:'+(COLORS[p.c]||"#888")+'"></span><span class="n">'+esc(p.n)+(p.h?' <span class="muted">· host</span>':"")+(p.on?"":' <span class="faint">(away)</span>')+'</span>'+(showGain&&p.g?'<span class="g">+'+p.g+'</span>':"")+'<span class="s">'+p.s.toLocaleString()+'</span></li>'}).join("")}
+
+// ── Join view ──
+function renderSwatches(){var taken={},free=0;if(state){state.players.forEach(function(p){if(p.on)taken[p.c]=1});ORDER.forEach(function(c){if(!taken[c])free++})}
+$("swatches").innerHTML=ORDER.map(function(c){var dis=state&&taken[c]&&free>0;return '<button type="button" class="sw'+(pickedColor===c?" sel":"")+'" data-c="'+c+'" style="background:'+COLORS[c]+'" aria-label="'+c+'"'+(dis?" disabled":"")+'></button>'}).join("");
+if(state){$("j-count").textContent=state.players.filter(function(p){return p.on}).length+" of "+state.max+" players in the lobby"}}
+$("swatches").addEventListener("click",function(e){var b=e.target.closest(".sw");if(!b||b.disabled)return;pickedColor=b.dataset.c;renderSwatches()});
+$("join").addEventListener("click",function(){var name=$("nick").value.trim();$("j-err").textContent="";if(!name){$("j-err").textContent="Type a name first.";return}if(!pickedColor){$("j-err").textContent="Pick a colour.";return}
+post("/join",q({name:name,color:pickedColor})).then(function(j){if(j.token){token=j.token;try{localStorage.setItem("deckquiz_token",token)}catch(e){}me={name:j.name,color:j.color};lastV=-1;poll()}else{$("j-err").textContent={full:"The lobby is full (12 players).",color_taken:"That colour is taken.",empty_name:"Type a name first."}[j.error]||"Could not join. Try again."}})});
+
+// ── Host controls ──
+function hostAction(a){return post("/host",q({t:token,a:a})).then(function(j){if(j.ok){lastV=-1;poll()}})}
+$("start").onclick=function(){hostAction("start")};
+$("skip").onclick=$("skip2").onclick=function(){hostAction("skip")};
+$("end").onclick=$("end2").onclick=function(){if(confirm("End the game for everyone?"))hostAction("end")};
+$("newgame").onclick=function(){hostAction("new")};
+$("leave").onclick=function(){post("/leave",q({t:token}));forget()};
+function forget(){token=null;me=null;try{localStorage.removeItem("deckquiz_token")}catch(e){}show("v-join");renderSwatches()}
+
+// ── Answer view ──
+$("grid").addEventListener("click",function(e){var b=e.target.closest(".ans");if(!b||b.classList.contains("dim")||b.classList.contains("sel"))return;var i=+b.dataset.i;
+Array.prototype.forEach.call($("grid").children,function(c){c.classList.toggle("sel",+c.dataset.i===i);c.classList.toggle("dim",+c.dataset.i!==i)});
+post("/answer",q({t:token,c:i})).then(function(j){if(!j.ok&&j.error!=="already_answered"){renderGrid(null)}})});
+function renderGrid(choice){$("grid").innerHTML=[0,1,2,3].map(function(i){return shape(i,choice==null?"":(choice===i?"sel":"dim"))}).join("")}
+function tickBar(){if(!deadline)return;var left=Math.max(0,deadline-Date.now());$("a-bar").style.width=(100*left/total)+"%";if(left>0)timer=requestAnimationFrame(tickBar)}
+
+// ── Render from snapshot ──
+function render(s){var you=s.you;
+if(!you){if(token&&s.v!==undefined){forget()}else{show("v-join");renderSwatches()}return}
+me={name:you.name,color:you.color};
+var hostBar=function(id,on){$(id).hidden=!(you.host&&on)};
+if(s.phase==="lobby"){show("v-lobby");meDot("l");$("l-count").textContent=s.players.filter(function(p){return p.on}).length+" of "+s.max;playersList($("l-players"),s.players,false);
+hostBar("l-host",true);$("start").disabled=s.start!=="ok";$("l-why").textContent=you.host?({players:"Waiting for a second player.",questions:"The Deck is still downloading questions.",ok:""}[s.start]||""):"";}
+else if(s.phase==="question"){var was=document.querySelector("#v-answer.on");show("v-answer");meDot("a");$("a-q").textContent="Q "+(s.q.i+1)+" / "+s.q.n+" · "+you.score.toLocaleString()+" pts";
+if(!was||lastQ!==s.q.i){renderGrid(you.choice==null?null:you.choice);lastQ=s.q.i}else if(you.choice!=null){renderGrid(you.choice)}
+total=s.q.total||1;deadline=Date.now()+(s.q.remaining||0);cancelAnimationFrame(timer);tickBar();hostBar("a-host",true);}
+else if(s.phase==="reveal"||s.phase==="standings"){show("v-result");meDot("r");$("r-q").textContent="Q "+(s.q.i+1)+" / "+s.q.n;
+var ok=you.correct===true,none=you.choice==null;var big=$("r-big");big.style.background=ok?"rgba(132,204,22,.15)":"rgba(229,83,61,.15)";
+big.innerHTML='<svg width="64" height="64" viewBox="0 0 64 64" aria-hidden="true">'+(ok?'<path d="M14 34 L27 46 L50 20" stroke="#84cc16" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/>':'<path d="M18 18 L46 46 M46 18 L18 46" stroke="#e5533d" stroke-width="7" stroke-linecap="round"/>')+'</svg>';
+$("r-title").textContent=ok?"Correct!":none?"Too slow":"Not this time";
+var c=s.r?s.r.correct:null;$("r-sub").innerHTML=(c==null?"":"The answer was the <b>"+LABELS[c]+"</b>."+(none||ok?"":" You picked the "+LABELS[you.choice]+"."))+(s.r&&s.r.why?"<br>"+esc(s.r.why):"");
+$("r-gain").textContent="+"+you.gain;$("r-rank").textContent=you.rank+(["th","st","nd","rd"][(you.rank%10>3||Math.floor(you.rank%100/10)===1)?0:you.rank%10]);$("r-streak").textContent=you.streak;
+playersList($("r-players"),s.phase==="standings"?s.players:[],true);hostBar("r-host",true);$("r-foot").textContent=s.phase==="reveal"?"Standings next":"Next question on the Deck shortly";}
+else if(s.phase==="podium"){show("v-podium");var w=s.players[0];$("p-title").textContent=w?(w.n+" wins!"):"Game over";playersList($("p-players"),s.players,false);hostBar("p-host",true);}
+}
+var lastQ=-1;
+
+// ── Polling ──
+function poll(){clearTimeout(pollTimer);var url="/state?v="+lastV+(token?"&t="+encodeURIComponent(token):"");
+fetch(url,{cache:"no-store"}).then(function(r){if(r.status===204)return null;if(!r.ok)throw 0;return r.json()}).then(function(s){if(s){state=s;lastV=s.v;render(s)}else if(state&&state.phase==="lobby"&&!token){renderSwatches()}
+pollTimer=setTimeout(poll,(state&&state.poll)||1000)}).catch(function(){$("j-count").textContent="Cannot reach the Deck. Are you on its Wi-Fi?";pollTimer=setTimeout(poll,2000)})}
+document.addEventListener("visibilitychange",function(){if(!document.hidden){lastV=-1;poll()}});
+renderSwatches();poll();
+})();
+</script>
+</body>
+</html>
