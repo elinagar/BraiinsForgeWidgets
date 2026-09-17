@@ -37,10 +37,18 @@ use crate::model::{Game, PODIUM_MS, Phase, REVEAL_MS};
 use crate::screens::question::seconds_left;
 use crate::theme;
 
+const SND_JOIN: Audio = include_audio!("assets/sounds/join.wav");
+const SND_START: Audio = include_audio!("assets/sounds/start.wav");
+const SND_QUESTION: Audio = include_audio!("assets/sounds/question.wav");
+const SND_LOCK: Audio = include_audio!("assets/sounds/lock.wav");
 const SND_TICK: Audio = include_audio!("assets/sounds/tick.wav");
 const SND_CORRECT: Audio = include_audio!("assets/sounds/correct.wav");
 const SND_WRONG: Audio = include_audio!("assets/sounds/wrong.wav");
+const SND_STANDINGS: Audio = include_audio!("assets/sounds/standings.wav");
 const SND_FANFARE: Audio = include_audio!("assets/sounds/fanfare.wav");
+
+/// Quiet cues (answer locks, ticks) sit under the room's chatter.
+const SOFT: Volume = Volume::new(55);
 
 /// The amber chase starts with this many seconds left.
 const WARN_FROM_S: u32 = 5;
@@ -77,6 +85,7 @@ thread_local! {
     static LAST_PLAYERS: Cell<usize> = const { Cell::new(0) };
     static LAST_SECOND: Cell<u32> = const { Cell::new(u32::MAX) };
     static WARNED: Cell<bool> = const { Cell::new(false) };
+    static LAST_ANSWERED: Cell<usize> = const { Cell::new(0) };
 }
 
 /// Call once per frame after the game ticked. Returns the kind entered on
@@ -89,7 +98,7 @@ pub fn on_frame(game: &Game, sounds: bool) -> Option<Kind> {
         on_enter(kind, game, sounds);
     }
     match now {
-        Kind::Lobby => on_lobby_frame(game),
+        Kind::Lobby => on_lobby_frame(game, sounds),
         Kind::Question => on_question_frame(game, sounds),
         Kind::Reveal | Kind::Standings | Kind::Podium => {}
     }
@@ -111,6 +120,11 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
             led::stop();
             WARNED.set(false);
             LAST_SECOND.set(u32::MAX);
+            LAST_ANSWERED.set(0);
+            if sounds {
+                let first = matches!(game.phase(), Phase::Question { index: 0, .. });
+                play(if first { &SND_START } else { &SND_QUESTION }, Volume::FULL);
+            }
         }
         Kind::Reveal => {
             let (right, total) = correct_share(game);
@@ -127,10 +141,14 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
                 Some(REVEAL_MS),
             );
             if sounds {
-                play(sound);
+                play(sound, Volume::FULL);
             }
         }
-        Kind::Standings => {}
+        Kind::Standings => {
+            if sounds {
+                play(&SND_STANDINGS, Volume::FULL);
+            }
+        }
         Kind::Podium => {
             if let Some(winner) = game.standings().first() {
                 led::set_effect(
@@ -141,13 +159,13 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
                 );
             }
             if sounds {
-                play(&SND_FANFARE);
+                play(&SND_FANFARE, Volume::FULL);
             }
         }
     }
 }
 
-fn on_lobby_frame(game: &Game) {
+fn on_lobby_frame(game: &Game, sounds: bool) {
     let count = game.connected().count();
     let before = LAST_PLAYERS.replace(count);
     if count > before
@@ -159,6 +177,9 @@ fn on_lobby_frame(game: &Game) {
             0,
             Some(JOIN_FLASH_MS),
         );
+        if sounds {
+            play(&SND_JOIN, Volume::FULL);
+        }
     }
 }
 
@@ -176,7 +197,12 @@ fn on_question_frame(game: &Game, sounds: bool) {
         );
     }
     if sounds && secs != before && secs > 0 && secs <= TICK_FROM_S {
-        play(&SND_TICK);
+        play(&SND_TICK, SOFT);
+    }
+    let answered = game.answered_count();
+    let seen = LAST_ANSWERED.replace(answered);
+    if sounds && answered > seen {
+        play(&SND_LOCK, SOFT);
     }
 }
 
@@ -191,6 +217,6 @@ fn correct_share(game: &Game) -> (usize, usize) {
     (right, total)
 }
 
-fn play(audio: &Audio) {
-    audio_play(ensure_audio_registered(audio), Volume::FULL);
+fn play(audio: &Audio, volume: Volume) {
+    audio_play(ensure_audio_registered(audio), volume);
 }

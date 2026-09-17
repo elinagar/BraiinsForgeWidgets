@@ -32,11 +32,11 @@ use bmc_wasm_sdk::*;
 
 use crate::model::push_usize;
 use crate::screens::parts::{avatar, body, chip, hspace, topbar, vspace};
-use crate::theme::{BG, CARD, FONT_CAPTION, FONT_LABEL, MUTED, TEXT};
+use crate::theme::{ACCENT, BG, CARD, FONT_LABEL, MUTED, TEXT};
 
 const LIST_W: f32 = 480.0;
-const PODIUM_W: f32 = 170.0;
-const PODIUM_H: [f32; 3] = [200.0, 150.0, 110.0];
+const PODIUM_W: f32 = 190.0;
+const PODIUM_H: [f32; 3] = [190.0, 140.0, 100.0];
 /// Rows the list beside the podium can show without scrolling.
 const LIST_ROWS: usize = 5;
 
@@ -94,7 +94,7 @@ fn podium(data: &StandingsData) -> Node {
         headline.push_str(" wins!");
         children.push(text(
             headline,
-            style!(size: 34, weight: FontWeight::BOLD, color: TEXT, align: TextAlign::Center),
+            style!(size: 56, weight: FontWeight::BOLD, color: ACCENT, align: TextAlign::Center, line_height: 1.0),
         ));
     }
     children.push(row(
@@ -113,7 +113,7 @@ fn block(rank: usize, row_data: &StandingRow) -> Node {
     col(
         props!(width: PODIUM_W, cross_align: CrossAlign::Center, gap: 10.0),
         [
-            avatar(&row_data.name, row_data.color, 64.0, true, None),
+            avatar(&row_data.name, row_data.color, 72.0, Some(22), None),
             col(
                 props!(
                     width: PODIUM_W,
@@ -124,11 +124,14 @@ fn block(rank: usize, row_data: &StandingRow) -> Node {
                     gap: 2.0,
                 ),
                 [
-                    vspace(12.0),
-                    text(place, style!(size: 30, weight: FontWeight::BOLD, color: BG)),
+                    vspace(10.0),
+                    text(
+                        place,
+                        style!(size: 44, weight: FontWeight::BOLD, color: BG, line_height: 1.0),
+                    ),
                     text(
                         row_data.score.as_str(),
-                        style!(size: 16, weight: FontWeight::SEMIBOLD, color: BG),
+                        style!(size: 24, weight: FontWeight::BOLD, color: BG),
                     ),
                 ],
             ),
@@ -149,13 +152,10 @@ fn list(data: &StandingsData) -> Node {
         let mut more = String::from("and ");
         push_usize(&mut more, data.rows.len() - 3 - LIST_ROWS);
         more.push_str(" more");
-        rows.push(text(more, style!(size: FONT_CAPTION, color: MUTED)));
+        rows.push(text(more, style!(size: FONT_LABEL, color: MUTED)));
     }
     if let Some(note) = &data.footnote {
-        rows.push(text(
-            note.as_str(),
-            style!(size: FONT_CAPTION, color: MUTED),
-        ));
+        rows.push(text(note.as_str(), style!(size: FONT_LABEL, color: MUTED)));
     }
     col(
         props!(width: LIST_W, justify_content: Justify::Center, gap: 10.0),
@@ -168,31 +168,31 @@ fn list_row(rank: usize, r: &StandingRow) -> Node {
     push_usize(&mut place, rank);
     let mut children = vec![
         col(
-            props!(width: 28.0),
+            props!(width: 34.0),
             [text(
                 place,
-                style!(size: 20, weight: FontWeight::BOLD, color: MUTED),
+                style!(size: 24, weight: FontWeight::BOLD, color: MUTED),
             )],
         ),
         canvas(
-            props!(width: 34.0, height: 34.0),
-            [Draw::circle(17.0, 17.0, 17.0, r.color)],
+            props!(width: 40.0, height: 40.0),
+            [Draw::circle(20.0, 20.0, 20.0, r.color)],
         ),
         text(
             r.name.as_str(),
-            style!(size: 18, weight: FontWeight::SEMIBOLD, color: TEXT, flex: 1.0, text_overflow: TextOverflow::Ellipsis),
+            style!(size: 22, weight: FontWeight::SEMIBOLD, color: TEXT, flex: 1.0, text_overflow: TextOverflow::Ellipsis),
         ),
     ];
     if let Some(gain) = &r.gain {
         let mut plus = String::from("+");
         plus.push_str(gain);
-        children.push(text(plus, style!(size: FONT_LABEL, color: LIME_50)));
+        children.push(text(plus, style!(size: 18, color: LIME_50)));
     }
     children.push(col(
-        props!(width: 90.0),
+        props!(width: 100.0),
         [text(
             r.score.as_str(),
-            style!(size: 20, weight: FontWeight::BOLD, color: TEXT, align: TextAlign::Right),
+            style!(size: 24, weight: FontWeight::BOLD, color: TEXT, align: TextAlign::Right),
         )],
     ));
     row(

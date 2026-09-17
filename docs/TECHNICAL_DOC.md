@@ -45,8 +45,11 @@ Deck's package build and the `deck deploy` harness are Nix flake outputs of that
   is cleared and the pool starts over.
 - **Persistence (KV).** `quiz_played` (comma-separated IDs, capped at 2 000), `quiz_best` (top ten `score|name|date`
   lines), `quiz_best_line` (the sentence the lobby and podium show).
-- **Effects.** Join: solid flash in the newcomer's colour. Last 5 s: amber chase. Reveal: green or red breathe by
-  majority, with a chime or a low tone. Podium: chase in the winner's colour with a fanfare. All effects are
+- **Effects.** Join: solid flash in the newcomer's colour and a chime. First question: rising sting; later
+  questions: two-note cue. Answer locked: quiet tap. Last 5 s: amber chase with quiet ticks. Reveal: green or red
+  breathe by majority, with a bright arpeggio or a soft descending line. Standings: short riser. Podium: chase in
+  the winner's colour with a brass fanfare. Sounds are synthesized 22 kHz mono PCM under `assets/sounds/`, about
+  360 KB in total. All effects are
   scene-local; `led::stop()` on unload. Sounds are gated by the *Sounds* param and follow device volume.
 - **Touch.** Only the lobby's Reset button. `on_touch` requests a frame; the click is read from `render_ui`'s result.
 

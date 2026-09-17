@@ -151,7 +151,7 @@ fn middle(data: &LobbyData) -> Node {
                 &p.name,
                 p.color,
                 AVATAR,
-                data.show_names,
+                data.show_names.then_some(FONT_LABEL),
                 p.is_host.then_some("Host"),
             )
         })

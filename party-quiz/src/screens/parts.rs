@@ -130,9 +130,16 @@ pub fn stat_card(caption: &str, content: Vec<Node>) -> Node {
     )
 }
 
-/// A round avatar in the player's colour with their initial, a name below.
+/// A round avatar in the player's colour with their initial, and the name
+/// below at `name_size` when given.
 #[must_use]
-pub fn avatar(name: &str, color: Color, size: f32, show_name: bool, caption: Option<&str>) -> Node {
+pub fn avatar(
+    name: &str,
+    color: Color,
+    size: f32,
+    name_size: Option<u32>,
+    caption: Option<&str>,
+) -> Node {
     let initial: String = name.chars().take(1).collect::<String>().to_uppercase();
     let font = crate::theme::font_for(size * 0.4);
     let mut children = vec![canvas(
@@ -155,8 +162,11 @@ pub fn avatar(name: &str, color: Color, size: f32, show_name: bool, caption: Opt
             ),
         ],
     )];
-    if show_name {
-        children.push(text(name, style!(size: FONT_LABEL, color: TEXT)));
+    if let Some(font) = name_size {
+        children.push(text(
+            name,
+            style!(size: font, weight: FontWeight::SEMIBOLD, color: TEXT),
+        ));
     }
     if let Some(caption) = caption {
         children.push(text(

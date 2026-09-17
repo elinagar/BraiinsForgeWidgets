@@ -91,11 +91,14 @@ in packs from the Braiins Forge Nexus, cached on the device so a game works offl
 
 > As a player, I want the Deck's lights and sounds to react so that the game feels like a game show and not a form.
 
-- Lobby: the strip flashes in the newest player's colour for a moment as they join.
-- Countdown: an amber chase runs during the last 5 seconds, with a tick sound each second during the last 3.
+- Lobby: the strip flashes in the newest player's colour for a moment as they join, with a soft chime.
+- Game start: a rising three-note sting on the first question; a two-note "attention" cue on every later question.
+- Countdown: an amber chase runs during the last 5 seconds, with a quiet tick each second during the last 3, and a
+  quiet tap on the Deck each time a player locks an answer.
 - Reveal: the strip breathes green with a chime when at least half the players were right, red with a low tone
   otherwise.
-- Podium: a chase in the winner's colour for 3 seconds with a short fanfare.
+- Standings: a short riser as the standings appear.
+- Podium: a chase in the winner's colour for 3 seconds with a brass fanfare.
 - All LED effects are scene-local. When the widget is not on the active scene nothing lights.
 - Sounds follow the device volume, including the night mode volume, and can be turned off with the *Sounds* parameter.
 

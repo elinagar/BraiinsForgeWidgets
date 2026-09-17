@@ -28,8 +28,8 @@ Party Quiz turns the Deck into a trivia game show. The Deck is the board; every 
 
 - The Deck shows the question and four answers, each in a fixed colour and shape: red triangle, blue diamond, amber
   circle, green square. Your phone shows the same four shapes without the text, so everyone looks at the board.
-- Tap the shape of your answer. The first tap locks it. The ring on the Deck counts down; the lights turn amber for
-  the last five seconds and tick for the last three.
+- Tap the shape of your answer. The first tap locks it and the Deck gives a quiet tap. The ring on the Deck counts
+  down; the lights turn amber for the last five seconds and tick for the last three.
 - A correct answer scores 1 000 points in the first instant, sliding down to 500 at the deadline. Three correct answers
   in a row add a 200-point bonus to every further correct answer until you miss.
 - The reveal highlights the right card, shows how the room voted and who was fastest, and adds a one-line
