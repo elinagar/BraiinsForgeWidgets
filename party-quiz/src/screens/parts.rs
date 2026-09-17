@@ -34,6 +34,38 @@ use crate::theme::{
     TEXT, TOPBAR_H,
 };
 
+/// A fixed-width gap inside a row.
+#[must_use]
+pub fn hspace(width: f32) -> Node {
+    col(props!(width: width), [])
+}
+
+/// A fixed-height gap inside a column.
+#[must_use]
+pub fn vspace(height: f32) -> Node {
+    col(props!(height: height), [])
+}
+
+/// The area under the top bar: page side margins and `top`/`bottom` room
+/// around `inner`, which stretches to fill (`flex: 1.0`).
+///
+/// `PropsData` has only a uniform `padding` and its `inset_*` fields mean
+/// absolute positioning, so asymmetric spacing is built from spacer nodes.
+#[must_use]
+pub fn body(top: f32, bottom: f32, inner: Node) -> Node {
+    col(
+        props!(flex: 1.0),
+        [
+            vspace(top),
+            row(
+                props!(flex: 1.0),
+                [hspace(PAGE_PAD), inner, hspace(PAGE_PAD)],
+            ),
+            vspace(bottom),
+        ],
+    )
+}
+
 /// The bar across the top of every screen: the game name, a chip naming the
 /// phase, and a right-aligned status line.
 #[must_use]
@@ -46,17 +78,16 @@ pub fn topbar(chips: Vec<Node>, status: &str, trailing: Option<Node>) -> Node {
     let mut right = vec![text(status, style!(size: FONT_LABEL, color: MUTED))];
     right.extend(trailing);
     col(
-        props!(height: TOPBAR_H, inset_left: PAGE_PAD, inset_right: PAGE_PAD),
+        props!(height: TOPBAR_H),
         [
             row(
-                props!(
-                    flex: 1.0,
-                    cross_align: CrossAlign::Center,
-                    justify_content: Justify::SpaceBetween,
-                ),
+                props!(flex: 1.0, cross_align: CrossAlign::Center),
                 [
+                    hspace(PAGE_PAD),
                     row(props!(gap: 14.0, cross_align: CrossAlign::Center), left),
+                    spacer(1.0),
                     row(props!(gap: 20.0, cross_align: CrossAlign::Center), right),
+                    hspace(PAGE_PAD),
                 ],
             ),
             col(props!(height: 1.0, background: RULE), []),
@@ -67,18 +98,21 @@ pub fn topbar(chips: Vec<Node>, status: &str, trailing: Option<Node>) -> Node {
 /// A small rounded label.
 #[must_use]
 pub fn chip(label: &str, background: Color, foreground: Color) -> Node {
-    col(
+    row(
         props!(
             padding: 6.0,
-            inset_left: 8.0,
-            inset_right: 8.0,
             border_radius: RADIUS_CHIP,
             background: background,
+            cross_align: CrossAlign::Center,
         ),
-        [text(
-            label,
-            style!(size: FONT_LABEL, weight: FontWeight::SEMIBOLD, color: foreground),
-        )],
+        [
+            hspace(4.0),
+            text(
+                label,
+                style!(size: FONT_LABEL, weight: FontWeight::SEMIBOLD, color: foreground),
+            ),
+            hspace(4.0),
+        ],
     )
 }
 
@@ -166,10 +200,9 @@ pub fn answer_card(index: usize, label: &str, color: Color, state: CardState) ->
             border_color: TEXT,
             cross_align: CrossAlign::Center,
             gap: 18.0,
-            inset_left: 26.0,
-            inset_right: 20.0,
         ),
         [
+            hspace(26.0),
             shape_box(index, ink),
             text(
                 label,
@@ -181,6 +214,7 @@ pub fn answer_card(index: usize, label: &str, color: Color, state: CardState) ->
                     text_overflow: TextOverflow::Ellipsis,
                 ),
             ),
+            hspace(20.0),
         ],
     )
 }

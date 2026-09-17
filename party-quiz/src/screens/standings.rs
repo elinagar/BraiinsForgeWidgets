@@ -31,8 +31,8 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::push_usize;
-use crate::screens::parts::{avatar, chip, topbar};
-use crate::theme::{BG, CARD, FONT_CAPTION, FONT_LABEL, MUTED, PAGE_PAD, TEXT};
+use crate::screens::parts::{avatar, body, chip, hspace, topbar, vspace};
+use crate::theme::{BG, CARD, FONT_CAPTION, FONT_LABEL, MUTED, TEXT};
 
 const LIST_W: f32 = 480.0;
 const PODIUM_W: f32 = 170.0;
@@ -70,15 +70,10 @@ pub fn standings_view(width: f32, height: f32, data: &StandingsData) -> Node {
         props!(width: width, height: height, background: BG),
         [
             topbar(vec![chip(label, CARD, TEXT)], &data.status_line, None),
-            row(
-                props!(
-                    flex: 1.0,
-                    inset_left: PAGE_PAD,
-                    inset_right: PAGE_PAD,
-                    inset_top: 20.0,
-                    gap: 48.0,
-                ),
-                [podium(data), list(data)],
+            body(
+                20.0,
+                0.0,
+                row(props!(flex: 1.0, gap: 48.0), [podium(data), list(data)]),
             ),
         ],
     )
@@ -126,10 +121,10 @@ fn block(rank: usize, row_data: &StandingRow) -> Node {
                     border_radius: 16.0,
                     background: row_data.color,
                     cross_align: CrossAlign::Center,
-                    inset_top: 14.0,
                     gap: 2.0,
                 ),
                 [
+                    vspace(12.0),
                     text(place, style!(size: 30, weight: FontWeight::BOLD, color: BG)),
                     text(
                         row_data.score.as_str(),
@@ -204,13 +199,16 @@ fn list_row(rank: usize, r: &StandingRow) -> Node {
         props!(
             gap: 16.0,
             padding: 12.0,
-            inset_left: 18.0,
-            inset_right: 18.0,
             border_radius: 12.0,
             background: CARD,
             cross_align: CrossAlign::Center,
         ),
-        children,
+        {
+            let mut padded = vec![hspace(6.0)];
+            padded.extend(children);
+            padded.push(hspace(6.0));
+            padded
+        },
     )
 }
 

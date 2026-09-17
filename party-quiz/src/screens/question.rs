@@ -31,7 +31,7 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::{ANSWER_COUNT, push_usize};
-use crate::screens::parts::{CardState, answer_card, chip, topbar};
+use crate::screens::parts::{CardState, answer_card, body, chip, topbar};
 use crate::theme::{
     ACCENT, ANSWER_COLORS, BG, CARD, FAINT, FONT_CAPTION, MUTED, PAGE_PAD, RULE, TEXT,
 };
@@ -91,16 +91,13 @@ pub fn question_view(width: f32, height: f32, data: &QuestionData) -> Node {
                 &status,
                 None,
             ),
-            row(
-                props!(
-                    flex: 1.0,
-                    inset_left: PAGE_PAD,
-                    inset_right: PAGE_PAD,
-                    inset_top: 22.0,
-                    inset_bottom: 18.0,
-                    gap: GAP,
+            body(
+                22.0,
+                18.0,
+                row(
+                    props!(flex: 1.0, gap: GAP),
+                    [board(board_w, data), side(data)],
                 ),
-                [board(board_w, data), side(data)],
             ),
         ],
     )

@@ -31,9 +31,9 @@
 use bmc_wasm_sdk::*;
 
 use crate::model::{ANSWER_COUNT, push_usize};
-use crate::screens::parts::{CardState, chip, topbar};
+use crate::screens::parts::{CardState, body, chip, hspace, topbar};
 use crate::screens::question::cards;
-use crate::theme::{ACCENT, ANSWER_COLORS, BG, CARD, FONT_BODY, FONT_LABEL, MUTED, PAGE_PAD, TEXT};
+use crate::theme::{ACCENT, ANSWER_COLORS, BG, CARD, FONT_BODY, FONT_LABEL, MUTED, TEXT};
 
 const SIDE_W: f32 = 460.0;
 const GAP: f32 = 36.0;
@@ -80,16 +80,10 @@ pub fn reveal_view(width: f32, height: f32, data: &RevealData) -> Node {
                 &status,
                 None,
             ),
-            row(
-                props!(
-                    flex: 1.0,
-                    inset_left: PAGE_PAD,
-                    inset_right: PAGE_PAD,
-                    inset_top: 22.0,
-                    inset_bottom: 18.0,
-                    gap: GAP,
-                ),
-                [board(data), side(data)],
+            body(
+                22.0,
+                18.0,
+                row(props!(flex: 1.0, gap: GAP), [board(data), side(data)]),
             ),
         ],
     )
@@ -207,16 +201,16 @@ fn fastest_card(fastest: Option<&(String, String)>) -> Node {
     row(
         props!(
             padding: 14.0,
-            inset_left: 18.0,
-            inset_right: 18.0,
             border_radius: 14.0,
             background: CARD,
             cross_align: CrossAlign::Center,
-            justify_content: Justify::SpaceBetween,
         ),
         [
+            hspace(4.0),
             text("Fastest correct", style!(size: FONT_LABEL, color: MUTED)),
+            spacer(1.0),
             row(props!(gap: 8.0), value),
+            hspace(4.0),
         ],
     )
 }

@@ -29,10 +29,10 @@
 )]
 use bmc_wasm_sdk::*;
 
-use crate::screens::parts::{avatar, chip, stat_card, topbar};
+use crate::screens::parts::{avatar, body, chip, stat_card, topbar};
 use crate::theme::{
     ACCENT, BG, CARD, CARD_LIGHT, FAINT, FONT_BODY, FONT_HEADLINE, FONT_LABEL, FONT_STAT, MUTED,
-    PAGE_PAD, RADIUS_CARD, TEXT, TEXT_ON_LIGHT,
+    RADIUS_CARD, TEXT, TEXT_ON_LIGHT,
 };
 
 const QR_SIZE: f32 = 240.0;
@@ -89,9 +89,13 @@ pub fn lobby_view(width: f32, height: f32, data: &LobbyData) -> Node {
                 data.show_reset
                     .then(|| button!(RESET_KEY, "Reset", style: Ghost, size: Small)),
             ),
-            row(
-                props!(flex: 1.0, padding: 28.0, inset_left: PAGE_PAD, inset_right: PAGE_PAD, gap: 40.0),
-                [qr_panel(&data.status), middle(data), side(data)],
+            body(
+                28.0,
+                28.0,
+                row(
+                    props!(flex: 1.0, gap: 40.0),
+                    [qr_panel(&data.status), middle(data), side(data)],
+                ),
             ),
         ],
     )
