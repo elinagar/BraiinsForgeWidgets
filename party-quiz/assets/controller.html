@@ -155,7 +155,7 @@ function render(s){var you=s.you;
 if(!you){if(token&&s.v!==undefined){forget()}else{show("v-join");renderSwatches()}return}
 me={name:you.name,color:you.color};
 var hostBar=function(id,on){$(id).hidden=!(you.host&&on)};
-if(s.phase==="lobby"){show("v-lobby");meDot("l");$("l-count").textContent=s.players.filter(function(p){return p.on}).length+" of "+s.max;playersList($("l-players"),s.players,false);
+if(s.phase==="lobby"){show("v-lobby");meDot("l");$("l-count").textContent=s.players.filter(function(p){return p.on}).length+" of "+s.max;playersList($("l-players"),s.players.filter(function(p){return p.on}),false);
 hostBar("l-host",true);$("start").disabled=s.start!=="ok";$("l-why").textContent=you.host?({players:"Waiting for a second player.",questions:"The Deck is still downloading questions.",ok:""}[s.start]||""):"";}
 else if(s.phase==="question"){var was=document.querySelector("#v-answer.on");show("v-answer");meDot("a");$("a-q").textContent="Q "+(s.q.i+1)+" / "+s.q.n+" · "+you.score.toLocaleString()+" pts";
 if(!was||lastQ!==s.q.i){renderGrid(you.choice==null?null:you.choice);lastQ=s.q.i}else if(you.choice!=null){renderGrid(you.choice)}

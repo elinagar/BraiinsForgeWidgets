@@ -394,6 +394,20 @@ impl Game {
         if cleaned.is_empty() {
             return Err(JoinError::EmptyName);
         }
+        // A phone that lost its token and comes back under the same name gets
+        // its seat and score back instead of a numbered twin.
+        if let Some(seat) = self
+            .players
+            .iter()
+            .position(|p| !p.connected && p.name.eq_ignore_ascii_case(&cleaned))
+        {
+            let player = &mut self.players[seat];
+            player.connected = true;
+            player.token = token;
+            player.color = color;
+            self.bump();
+            return Ok(seat);
+        }
         if self.connected().count() >= MAX_PLAYERS {
             return Err(JoinError::Full);
         }
@@ -430,12 +444,21 @@ impl Game {
         true
     }
 
-    /// The phone left. The seat and score stay so it can come back.
+    /// The phone left. During a game the seat and score stay, marked away, so
+    /// it can come back; in the lobby there is nothing to keep and the seat
+    /// and its colour are freed.
     pub fn leave(&mut self, token: u64) {
-        if let Some(player) = self.players.iter_mut().find(|p| p.token == token)
-            && player.connected
-        {
-            player.connected = false;
+        let Some(index) = self.players.iter().position(|p| p.token == token) else {
+            return;
+        };
+        if self.phase == Phase::Lobby {
+            self.players.remove(index);
+            for (seat, player) in self.players.iter_mut().enumerate() {
+                player.seat = seat;
+            }
+            self.bump();
+        } else if self.players[index].connected {
+            self.players[index].connected = false;
             self.bump();
         }
     }
@@ -857,12 +880,43 @@ mod tests {
     #[test]
     fn host_is_the_earliest_connected_player() {
         let mut game = table(3, 1);
+        game.start(100).expect("start, so seats survive a leave");
         assert_eq!(game.host().map(|p| p.seat), Some(0));
         game.leave(100);
         assert_eq!(game.host().map(|p| p.seat), Some(1));
         assert!(game.reconnect(100));
         assert_eq!(game.host().map(|p| p.seat), Some(0));
         assert!(!game.reconnect(4_242));
+    }
+
+    #[test]
+    fn leaving_the_lobby_frees_the_seat_and_colour() {
+        let mut game = table(2, 1);
+        game.leave(100);
+        assert_eq!(game.players().len(), 1);
+        assert_eq!(game.players()[0].seat, 0, "seats are renumbered");
+        let seat = game
+            .join("Eli", PlayerColor::Coral, 300)
+            .expect("colour is free again");
+        assert_eq!(game.players()[seat].name, "Eli", "no numbered twin");
+    }
+
+    #[test]
+    fn rejoining_with_the_same_name_mid_game_reclaims_the_seat() {
+        let mut game = table(2, 2);
+        game.start(100).expect("start");
+        game.answer(101, 1).expect("P1 answers right");
+        game.tick(20_000);
+        let score = game.player_by_token(101).expect("P1").score;
+        assert!(score > 0);
+        game.leave(101);
+        let seat = game.join("p1", PlayerColor::Teal, 555).expect("reclaim");
+        let p = &game.players()[seat];
+        assert_eq!(
+            (p.name.as_str(), p.score, p.token, p.connected),
+            ("P1", score, 555, true)
+        );
+        assert_eq!(game.players().len(), 2, "no extra seat was created");
     }
 
     #[test]

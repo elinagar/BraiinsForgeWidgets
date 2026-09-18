@@ -739,14 +739,17 @@ mod tests {
 
     #[test]
     fn polling_with_a_token_seats_a_returning_phone() {
-        let mut game = Game::default();
+        // Mid-game the seat survives a leave (in the lobby it is freed).
+        let mut game = game_with_questions();
         game.join("Eli", PlayerColor::Coral, 0xA).expect("seat");
+        game.join("Bo", PlayerColor::Blue, 0xB).expect("seat");
+        game.start(0xA).expect("start");
         game.leave(0xA);
-        assert_eq!(game.connected().count(), 0);
+        assert_eq!(game.connected().count(), 1);
         let mut tokens = || 1_u64;
         let (_, e) = handle(&mut game, &get("/state?t=a&v=0"), PAGE, &mut tokens);
         assert_eq!(e, Effect::GameChanged);
-        assert_eq!(game.connected().count(), 1);
+        assert_eq!(game.connected().count(), 2);
     }
 
     #[test]
