@@ -137,8 +137,8 @@ in packs from the Braiins Forge Nexus, cached on the device so a game works offl
 - The widget renders full-screen on the BMC100 Deck at 1280x480 only. The board needs the whole panel, and the phone
   controller assumes a Deck with an LED strip for the intended experience. Smaller combined-scene sizes and the miner
   displays are out of scope.
-- *Category pack*, *Difficulty*, *Questions per game*, *Answer time*, *Show player names on Deck*, and *Sounds* are
-  manifest-driven parameters configurable from the web UI. Scores follow the device number format.
+- *Category pack*, *Difficulty*, *Questions per game*, *Answer time*, *Show player names on Deck*, *Sounds*, and
+  *Sound level* are manifest-driven parameters configurable from the web UI. Scores follow the device number format.
 - The LED strip API drives the whole strip with one effect at a time (solid, breathe, chase), not individual LEDs, so
   per-player LEDs are out of reach; the lobby flash above is the substitute.
 - The widget uses one HTTP listener on an ephemeral port and registers it over mDNS as `_deck-quiz._tcp` so a

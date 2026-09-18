@@ -33,17 +33,50 @@
       "type": "string",
       "default_value": "mixed",
       "enum_values": [
-        { "value": "mixed", "label": "Mixed" },
-        { "value": "science", "label": "Science and space" },
-        { "value": "geography", "label": "Geography" },
-        { "value": "history", "label": "History" },
-        { "value": "entertainment", "label": "Film, TV and music" },
-        { "value": "sport", "label": "Sport" },
-        { "value": "food", "label": "Food and drink" },
-        { "value": "animals", "label": "Animals and nature" },
-        { "value": "tech", "label": "Technology" },
-        { "value": "bitcoin", "label": "Bitcoin and mining" },
-        { "value": "kids", "label": "Kids" }
+        {
+          "value": "mixed",
+          "label": "Mixed"
+        },
+        {
+          "value": "science",
+          "label": "Science and space"
+        },
+        {
+          "value": "geography",
+          "label": "Geography"
+        },
+        {
+          "value": "history",
+          "label": "History"
+        },
+        {
+          "value": "entertainment",
+          "label": "Film, TV and music"
+        },
+        {
+          "value": "sport",
+          "label": "Sport"
+        },
+        {
+          "value": "food",
+          "label": "Food and drink"
+        },
+        {
+          "value": "animals",
+          "label": "Animals and nature"
+        },
+        {
+          "value": "tech",
+          "label": "Technology"
+        },
+        {
+          "value": "bitcoin",
+          "label": "Bitcoin and mining"
+        },
+        {
+          "value": "kids",
+          "label": "Kids"
+        }
       ]
     },
     "difficulty": {
@@ -52,10 +85,22 @@
       "type": "string",
       "default_value": "mixed",
       "enum_values": [
-        { "value": "easy", "label": "Easy" },
-        { "value": "medium", "label": "Medium" },
-        { "value": "hard", "label": "Hard" },
-        { "value": "mixed", "label": "Mixed" }
+        {
+          "value": "easy",
+          "label": "Easy"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "hard",
+          "label": "Hard"
+        },
+        {
+          "value": "mixed",
+          "label": "Mixed"
+        }
       ]
     },
     "question_count": {
@@ -87,6 +132,26 @@
       "description": "Play countdown ticks, reveal chimes and the podium fanfare",
       "type": "boolean",
       "default_value": true
+    },
+    "sound_level": {
+      "name": "Sound level",
+      "description": "How loud the game cues play, relative to the Deck's volume",
+      "type": "string",
+      "default_value": "normal",
+      "enum_values": [
+        {
+          "value": "quiet",
+          "label": "Quiet"
+        },
+        {
+          "value": "normal",
+          "label": "Normal"
+        },
+        {
+          "value": "loud",
+          "label": "Loud"
+        }
+      ]
     }
   }
 }

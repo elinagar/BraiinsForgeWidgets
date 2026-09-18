@@ -47,8 +47,30 @@ const SND_WRONG: Audio = include_audio!("assets/sounds/wrong.wav");
 const SND_STANDINGS: Audio = include_audio!("assets/sounds/standings.wav");
 const SND_FANFARE: Audio = include_audio!("assets/sounds/fanfare.wav");
 
-/// Quiet cues (answer locks, ticks) sit under the room's chatter.
-const SOFT: Volume = Volume::new(55);
+/// Quiet cues (answer locks, ticks) sit under the room's chatter: this
+/// fraction of the chosen level, in percent.
+const SOFT_PCT: u32 = 55;
+
+/// Playback level for the game cues, or `None` when sounds are off.
+/// Scaled again by the Deck's own volume, so Normal is deliberately below
+/// full scale: the synthesized bells are hot and rooms are small.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Level(u8);
+
+impl Level {
+    pub const QUIET: Self = Self(35);
+    pub const NORMAL: Self = Self(60);
+    pub const LOUD: Self = Self(90);
+
+    fn full(self) -> Volume {
+        Volume::new(self.0)
+    }
+
+    fn soft(self) -> Volume {
+        let pct = u32::from(self.0) * SOFT_PCT / 100;
+        Volume::new(u8::try_from(pct).unwrap_or(u8::MAX))
+    }
+}
 
 /// The amber chase starts with this many seconds left.
 const WARN_FROM_S: u32 = 5;
@@ -90,7 +112,7 @@ thread_local! {
 
 /// Call once per frame after the game ticked. Returns the kind entered on
 /// this frame, if the phase changed, so the caller can do its own bookkeeping.
-pub fn on_frame(game: &Game, sounds: bool) -> Option<Kind> {
+pub fn on_frame(game: &Game, sounds: Option<Level>) -> Option<Kind> {
     let now = kind(game.phase());
     let last = LAST_KIND.replace(now);
     let entered = (now != last).then_some(now);
@@ -110,7 +132,7 @@ pub fn shutdown() {
     led::stop();
 }
 
-fn on_enter(kind: Kind, game: &Game, sounds: bool) {
+fn on_enter(kind: Kind, game: &Game, sounds: Option<Level>) {
     match kind {
         Kind::Lobby => {
             led::stop();
@@ -121,9 +143,9 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
             WARNED.set(false);
             LAST_SECOND.set(u32::MAX);
             LAST_ANSWERED.set(0);
-            if sounds {
+            if let Some(level) = sounds {
                 let first = matches!(game.phase(), Phase::Question { index: 0, .. });
-                play(if first { &SND_START } else { &SND_QUESTION }, Volume::FULL);
+                play(if first { &SND_START } else { &SND_QUESTION }, level.full());
             }
         }
         Kind::Reveal => {
@@ -140,13 +162,13 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
                 BREATHE_PERIOD_MS,
                 Some(REVEAL_MS),
             );
-            if sounds {
-                play(sound, Volume::FULL);
+            if let Some(level) = sounds {
+                play(sound, level.full());
             }
         }
         Kind::Standings => {
-            if sounds {
-                play(&SND_STANDINGS, Volume::FULL);
+            if let Some(level) = sounds {
+                play(&SND_STANDINGS, level.full());
             }
         }
         Kind::Podium => {
@@ -158,14 +180,14 @@ fn on_enter(kind: Kind, game: &Game, sounds: bool) {
                     Some(PODIUM_CHASE_MS.min(PODIUM_MS)),
                 );
             }
-            if sounds {
-                play(&SND_FANFARE, Volume::FULL);
+            if let Some(level) = sounds {
+                play(&SND_FANFARE, level.full());
             }
         }
     }
 }
 
-fn on_lobby_frame(game: &Game, sounds: bool) {
+fn on_lobby_frame(game: &Game, sounds: Option<Level>) {
     let count = game.connected().count();
     let before = LAST_PLAYERS.replace(count);
     if count > before
@@ -177,13 +199,13 @@ fn on_lobby_frame(game: &Game, sounds: bool) {
             0,
             Some(JOIN_FLASH_MS),
         );
-        if sounds {
-            play(&SND_JOIN, Volume::FULL);
+        if let Some(level) = sounds {
+            play(&SND_JOIN, level.full());
         }
     }
 }
 
-fn on_question_frame(game: &Game, sounds: bool) {
+fn on_question_frame(game: &Game, sounds: Option<Level>) {
     let remaining = game.remaining_ms();
     let secs = seconds_left(remaining);
     let before = LAST_SECOND.replace(secs);
@@ -196,13 +218,19 @@ fn on_question_frame(game: &Game, sounds: bool) {
             Some(remaining.max(1)),
         );
     }
-    if sounds && secs != before && secs > 0 && secs <= TICK_FROM_S {
-        play(&SND_TICK, SOFT);
+    if let Some(level) = sounds
+        && secs != before
+        && secs > 0
+        && secs <= TICK_FROM_S
+    {
+        play(&SND_TICK, level.soft());
     }
     let answered = game.answered_count();
     let seen = LAST_ANSWERED.replace(answered);
-    if sounds && answered > seen {
-        play(&SND_LOCK, SOFT);
+    if let Some(level) = sounds
+        && answered > seen
+    {
+        play(&SND_LOCK, level.soft());
     }
 }
 

@@ -134,6 +134,45 @@ impl Difficulty {
     }
 }
 bmc_wasm_sdk::impl_manifest_str_enum!(Difficulty);
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SoundLevel {
+    Quiet,
+    Normal,
+    Loud,
+}
+impl SoundLevel {
+    /// Every variant, in manifest-declaration order. Useful when a widget
+    /// wants to render a "pick one" UI or audit the enum exhaustively.
+    pub const ALL: &'static [Self] = &[Self::Quiet, Self::Normal, Self::Loud];
+    /// Manifest wire value for this variant.
+    #[must_use]
+    pub fn as_manifest_value(self) -> &'static str {
+        match self {
+            Self::Quiet => "quiet",
+            Self::Normal => "normal",
+            Self::Loud => "loud",
+        }
+    }
+    /// Human-readable label declared in the manifest's `enum_values`.
+    #[must_use]
+    pub fn as_manifest_label(self) -> &'static str {
+        match self {
+            Self::Quiet => "Quiet",
+            Self::Normal => "Normal",
+            Self::Loud => "Loud",
+        }
+    }
+    #[must_use]
+    pub fn from_manifest_value(s: &str) -> Option<Self> {
+        match s {
+            "quiet" => Some(Self::Quiet),
+            "normal" => Some(Self::Normal),
+            "loud" => Some(Self::Loud),
+            _ => None,
+        }
+    }
+}
+bmc_wasm_sdk::impl_manifest_str_enum!(SoundLevel);
 #[derive(Clone, Debug, PartialEq)]
 pub struct Params {
     pub answer_time: i32,
@@ -141,6 +180,7 @@ pub struct Params {
     pub difficulty: Difficulty,
     pub question_count: i32,
     pub show_player_names: bool,
+    pub sound_level: SoundLevel,
     pub sounds: bool,
 }
 impl Params {
@@ -153,6 +193,7 @@ impl Params {
             difficulty: <Difficulty as ParamRead>::read_required(snap, "difficulty"),
             question_count: <i32 as ParamRead>::read_required(snap, "question_count"),
             show_player_names: <bool as ParamRead>::read_required(snap, "show_player_names"),
+            sound_level: <SoundLevel as ParamRead>::read_required(snap, "sound_level"),
             sounds: <bool as ParamRead>::read_required(snap, "sounds"),
         }
     }
@@ -213,6 +254,9 @@ impl Params {
         }
         if self.show_player_names != other.show_player_names {
             out.push("show_player_names");
+        }
+        if self.sound_level != other.sound_level {
+            out.push("sound_level");
         }
         if self.sounds != other.sounds {
             out.push("sounds");

@@ -46,8 +46,8 @@ mod wasm_glue {
     )]
     use bmc_wasm_sdk::*;
 
-    use crate::effects::{self, Kind};
-    use crate::manifest_params::{CategoryPack, Difficulty, Params};
+    use crate::effects::{self, Kind, Level};
+    use crate::manifest_params::{CategoryPack, Difficulty, Params, SoundLevel};
     use crate::model::{
         ANSWER_COUNT, Game, MAX_PLAYERS, PODIUM_MS, Phase, Player, Question, QuestionDifficulty,
         REVEAL_MS, STANDINGS_MS, Settings,
@@ -105,6 +105,14 @@ mod wasm_glue {
     )]
     fn px(v: u32) -> f32 {
         v as f32
+    }
+
+    fn sound_level(params: &Params) -> Option<Level> {
+        params.sounds.then_some(match params.sound_level {
+            SoundLevel::Quiet => Level::QUIET,
+            SoundLevel::Normal => Level::NORMAL,
+            SoundLevel::Loud => Level::LOUD,
+        })
     }
 
     fn points_text(points: u32) -> String {
@@ -497,7 +505,7 @@ mod wasm_glue {
 
         let (tree, next_frame_ms) = GAME.with_borrow_mut(|game| {
             game.tick(delta_ms);
-            if let Some(kind) = effects::on_frame(game, params.sounds) {
+            if let Some(kind) = effects::on_frame(game, sound_level(&params)) {
                 on_entered(kind, game);
             }
             build_tree(game, &params, width, height)
