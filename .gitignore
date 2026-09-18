@@ -2,3 +2,5 @@
 /party-quiz/target
 *.orig
 .DS_Store
+/promo/clips/
+*.mp4
