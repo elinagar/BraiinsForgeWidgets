@@ -180,7 +180,7 @@ pub struct Params {
     pub difficulty: Difficulty,
     pub question_count: i32,
     pub show_player_names: bool,
-    pub sound_level: SoundLevel,
+    pub sound_level: Option<SoundLevel>,
     pub sounds: bool,
 }
 impl Params {
@@ -193,7 +193,7 @@ impl Params {
             difficulty: <Difficulty as ParamRead>::read_required(snap, "difficulty"),
             question_count: <i32 as ParamRead>::read_required(snap, "question_count"),
             show_player_names: <bool as ParamRead>::read_required(snap, "show_player_names"),
-            sound_level: <SoundLevel as ParamRead>::read_required(snap, "sound_level"),
+            sound_level: <SoundLevel as ParamRead>::read_optional(snap, "sound_level"),
             sounds: <bool as ParamRead>::read_required(snap, "sounds"),
         }
     }

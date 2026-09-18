@@ -151,7 +151,8 @@
           "value": "loud",
           "label": "Loud"
         }
-      ]
+      ],
+      "optional": true
     }
   }
 }

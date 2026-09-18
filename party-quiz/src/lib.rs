@@ -108,10 +108,11 @@ mod wasm_glue {
     }
 
     fn sound_level(params: &Params) -> Option<Level> {
+        // Instances configured before the level existed carry no value: Normal.
         params.sounds.then_some(match params.sound_level {
-            SoundLevel::Quiet => Level::QUIET,
-            SoundLevel::Normal => Level::NORMAL,
-            SoundLevel::Loud => Level::LOUD,
+            Some(SoundLevel::Quiet) => Level::QUIET,
+            Some(SoundLevel::Normal) | None => Level::NORMAL,
+            Some(SoundLevel::Loud) => Level::LOUD,
         })
     }
 
