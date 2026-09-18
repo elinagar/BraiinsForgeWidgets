@@ -58,9 +58,11 @@ const SOFT_PCT: u32 = 55;
 pub struct Level(u8);
 
 impl Level {
-    pub const QUIET: Self = Self(35);
-    pub const NORMAL: Self = Self(60);
-    pub const LOUD: Self = Self(90);
+    // The Deck's amplifier is loud for a table-top device and the cues are
+    // synthesized bells with little dynamics, so these sit well below full scale.
+    pub const QUIET: Self = Self(12);
+    pub const NORMAL: Self = Self(25);
+    pub const LOUD: Self = Self(50);
 
     fn full(self) -> Volume {
         Volume::new(self.0)
