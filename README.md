@@ -7,7 +7,7 @@ WebAssembly against the Deck SDK from [BraiinsForge/bmc-main](https://github.com
 
 | Widget | Folder | Status |
 | --- | --- | --- |
-| Party Quiz, phones as buzzers | [`party-quiz/`](party-quiz/) | Playing on a Deck with firmware 26.09 |
+| Party Quiz, phones as buzzers | [`party-quiz/`](party-quiz/) | Playing on a Deck with firmware 26.09; prebuilt package in [`dist/`](dist/) |
 
 ### Party Quiz
 
@@ -35,6 +35,24 @@ Deck screens, design mockups at the Deck's 1280x480 proportions (the LED strip b
 </p>
 
 ## Install Party Quiz on your Deck
+
+### Quick install, no build tools
+
+If you only want to play, you need `ssh`, the Deck's root password (set in its web app), and one file from
+[`dist/`](dist/):
+
+```shell
+git clone https://github.com/elinagar/BraiinsForgeWidgets.git && cd BraiinsForgeWidgets
+scripts/install-prebuilt.sh dist/party-quiz-0.1.0.nar <deck-ip>
+```
+
+The script copies the prebuilt package to the Deck, imports it with the Deck's own Nix, and adds it to the application
+profile with `bmc-nix-cli`; the whole thing takes seconds and nothing is installed on your computer. Then add
+**Party Quiz** to a fullscreen scene in the Deck's web app, turn off scene cycling, swipe to the scene and scan the QR
+code. The Deck must run firmware 26.09. On a stock Deck the game is silent; sounds need the runtime patch from the
+full install below. The Deck's next official update removes the widget until you run the script again.
+
+### Full install, for building and changing the widget
 
 The Deck installs software as Nix packages, so the widget is built and pushed with the Nix tooling from
 [BraiinsForge/bmc-main](https://github.com/BraiinsForge/bmc-main). You need a Linux or macOS machine on the same
